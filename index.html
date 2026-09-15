@@ -7,313 +7,336 @@
     <style>
         :root {
             --primary: #0f172a;
-            --accent: #d97706;
+            --secondary: #d97706;
+            --gold: #b45309;
             --bg: #f8fafc;
-            --border: #e2e8f0;
+            --border: #cbd5e1;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
         body { background-color: var(--bg); color: var(--primary); padding-bottom: 50px; }
 
         /* Top Navbar */
         .navbar {
-            background: var(--primary);
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
             color: white;
-            padding: 12px 20px;
+            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .nav-brand { font-weight: bold; color: #fbbf24; font-size: 1.1rem; }
-        .nav-tabs { display: flex; gap: 10px; }
-        .tab-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+        .nav-brand { font-weight: bold; color: #fbbf24; font-size: 1rem; }
+        .nav-buttons { display: flex; gap: 8px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .tab-btn.active, .tab-btn:hover { background: var(--accent); border-color: var(--accent); }
-
-        /* Container */
-        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; text-align: right; }
-
-        /* Dashboard Header (aveneas shop style) */
-        .store-header-box {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        .store-info h2 { font-size: 1.3rem; margin-bottom: 5px; color: var(--primary); }
-        .store-info p { font-size: 0.85rem; color: #64748b; }
-        .store-avatar {
-            width: 55px; height: 55px; background: var(--accent); color: white;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; font-weight: bold;
-        }
-
-        /* Sub Navigation for Dashboard */
-        .sub-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-        }
-        .sub-tab {
-            background: white;
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             cursor: pointer;
             font-weight: bold;
-            color: #475569;
-        }
-        .sub-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        /* Content Sections */
-        .section-panel { display: none; background: white; border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
-        .section-panel.active { display: block; }
-
-        /* Form Controls */
-        .form-group { margin-bottom: 15px; }
-        .form-label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: #334155; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; }
-        .btn-main { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
-        .btn-main:hover { background: #b45309; }
-
-        /* Products Table / List */
-        .product-card-item {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            padding: 12px 15px;
-            border-radius: 8px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            gap: 4px;
         }
-        .empty-text { text-align: center; color: #94a3b8; padding: 30px; font-size: 0.9rem; }
+        .nav-btn.gold { background: var(--secondary); border-color: var(--secondary); }
+
+        /* Hero & Search Section (matching your image design) */
+        .search-container {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .search-box-wrapper { display: flex; gap: 8px; max-width: 700px; margin: 0 auto 10px auto; }
+        .search-input {
+            flex: 1; padding: 10px 14px; border: 1px solid var(--border);
+            border-radius: 8px; font-size: 0.9rem; outline: none; text-align: right;
+        }
+        .search-btn { background: var(--primary); color: white; border: none; padding: 0 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        .categories-scroll {
+            display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; max-width: 700px; margin: 0 auto;
+            scrollbar-width: none;
+        }
+        .categories-scroll::-webkit-scrollbar { display: none; }
+        .cat-chip {
+            background: #f1f5f9; border: 1px solid var(--border); color: #334155;
+            padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; white-space: nowrap; cursor: pointer;
+        }
+        .cat-chip.active { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+        /* Hero Logo */
+        .hero-section {
+            text-align: center; padding: 40px 20px 20px 20px; background: white; border-bottom: 1px solid var(--border);
+        }
+        .hero-logo {
+            font-size: 4rem; font-weight: 900;
+            background: linear-gradient(135deg, #1e3a8a, #d97706);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-family: 'Times New Roman', Times, serif; margin-bottom: 5px; line-height: 1;
+        }
+        .hero-slogan { font-size: 1rem; font-weight: bold; color: #475569; }
+
+        /* Main Container */
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; text-align: right; }
+        
+        /* Cards & Panels */
+        .panel { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .form-group { margin-bottom: 12px; }
+        .form-label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; color: #334155; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; }
+        .btn-main { background: var(--secondary); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        
+        /* Store View & Products Grid */
+        .product-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .badge { background: #e0f2fe; color: #0369a1; padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; font-weight: bold; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: white; width: 100%; max-width: 450px; padding: 20px; border-radius: 12px; text-align: right; max-height: 90vh; overflow-y: auto; }
+        .close-btn { background: #ef4444; color: white; border: none; padding: 4px 10px; border-radius: 6px; float: left; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation Bar -->
+    <!-- Top Navbar (Matching user requested image design) -->
     <div class="navbar">
-        <div class="nav-brand">هور | HOR</div>
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchMainTab('merchant')">التاجر</button>
-            <button class="tab-btn" onclick="switchMainTab('storefront')">المتجر (للزبائن)</button>
+        <div class="nav-brand">هور | HOR - منصة التجارة المتعددة</div>
+        <div class="nav-buttons">
+            <button class="nav-btn gold" onclick="openModal('profileModal')">👤 الملف الشخصي ومتجري</button>
+            <button class="nav-btn" onclick="openModal('adminModal')">👑 لوحة المبرمج</button>
         </div>
     </div>
 
-    <div class="container">
-
-        <!-- ===== 1. لوحة تحكم التاجر ===== -->
-        <div id="merchantPanel" class="section-panel active" style="background: transparent; border: none; padding: 0;">
-            
-            <!-- Store Header Card -->
-            <div class="store-header-box">
-                <div class="store-info">
-                    <h2 id="displayStoreName">aveneas shop</h2>
-                    <p id="displayStoreDesc">أضف وصفًا مميزًا لمتجرك</p>
-                </div>
-                <div class="store-avatar" id="displayStoreAvatar">av</div>
-            </div>
-
-            <!-- Sub Navigation -->
-            <div class="sub-tabs">
-                <button class="sub-tab active" onclick="switchSubTab('products')">📦 المنتجات</button>
-                <button class="sub-tab" onclick="switchSubTab('orders')">📋 الطلبات</button>
-                <button class="sub-tab" onclick="switchSubTab('settings')">⚙️ التخصيص</button>
-            </div>
-
-            <!-- Products Panel -->
-            <div id="subProducts" class="section-panel active">
-                <button class="btn-main" style="margin-bottom: 15px;" onclick="openAddProductModal()">+ إضافة منتج</button>
-                <div id="merchantProductsList">
-                    <div class="empty-text">لا توجد منتجات بعد. أضف أول منتج لك.</div>
-                </div>
-            </div>
-
-            <!-- Orders Panel -->
-            <div id="subOrders" class="section-panel">
-                <div class="empty-text">لا توجد طلبات جديدة حالياً.</div>
-            </div>
-
-            <!-- Settings Panel (Customization) -->
-            <div id="subSettings" class="section-panel">
-                <div class="form-group">
-                    <label class="form-label">اسم المتجر:</label>
-                    <input type="text" id="inputStoreName" class="form-control" value="aveneas shop">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">وصف المتجر:</label>
-                    <input type="text" id="inputStoreDesc" class="form-control" value="أضف وصفًا مميزًا لمتجرك">
-                </div>
-                <button class="btn-main" onclick="saveStoreSettings()">حفظ التغييرات</button>
-            </div>
-
+    <!-- Search & Filter Bar -->
+    <div class="search-container">
+        <div class="search-box-wrapper">
+            <input type="text" class="search-input" placeholder="ابحث عن المتاجر، الملابس، المجهورات، أو الملفات الرقمية...">
+            <button class="search-btn">بحث</button>
         </div>
-
-        <!-- ===== 2. واجهة المتجر (للزبائن) ===== -->
-        <div id="storefrontPanel" class="section-panel">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
-                <div>
-                    <h2 id="frontStoreName" style="color: var(--primary);">aveneas shop</h2>
-                    <p id="frontStoreDesc" style="font-size: 0.85rem; color: #64748b;">أضف وصفًا مميزًا لمتجرك</p>
-                </div>
-                <button class="tab-btn" style="background: var(--accent);" onclick="alert('سلة التسوق فارغة')">🛒 السلة</button>
-            </div>
-            
-            <h4 style="margin-bottom: 10px; font-size: 1rem;">منتجات المتجر:</h4>
-            <div id="frontProductsList">
-                <div class="empty-text">لم يضف هذا المتجر أي منتجات بعد.</div>
-            </div>
+        <div class="categories-scroll">
+            <div class="cat-chip active">الكل</div>
+            <div class="cat-chip">ملابس</div>
+            <div class="cat-chip">مجوهرات وإكسسوارات</div>
+            <div class="cat-chip">رقمي (فرش رسم رقمي)</div>
         </div>
-
     </div>
 
-    <!-- Modal adding product -->
-    <div id="productModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:100;">
-        <div style="background:white; padding:20px; border-radius:12px; width:90%; max-width:400px; text-align:right;">
-            <h3 style="margin-bottom: 15px; color: var(--primary);">إضافة منتج جديد</h3>
+    <!-- Hero Branding Section -->
+    <div class="hero-section">
+        <div class="hero-logo">HOR</div>
+        <div class="hero-slogan">هور......... شراء سهل، بيع أسهل</div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="container" id="mainContainer">
+        <div class="panel" style="text-align: center;">
+            <h3 style="color: var(--primary); margin-bottom: 8px;">مرحباً بك في منصة هور 🏛️</h3>
+            <p style="color: #64748b; font-size: 0.9rem;">اضغط على زر "الملف الشخصي ومتجري" بالأعلى لتسجيل متجرك أو إدارة منتجاتك بكل سهولة.</p>
+        </div>
+    </div>
+
+    <!-- Modal: Profile & Merchant Registration / Store Dashboard -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('profileModal')">✕</button>
+            <div id="modalBodyContent">
+                <!-- Dynamic content: Either Registration Form or Store Dashboard -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Add Product -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('productModal')">✕</button>
+            <h3 style="margin-bottom: 12px; color: var(--secondary);">إضافة منتج جديد لمتجرك</h3>
             <div class="form-group">
                 <label class="form-label">اسم المنتج:</label>
-                <input type="text" id="pName" class="form-control" placeholder="مثال: فستان كوري / ملف رقمي">
+                <input type="text" id="pName" class="form-control" placeholder="مثال: فستان سهرة كوري">
             </div>
             <div class="form-group">
                 <label class="form-label">السعر (د.ع):</label>
-                <input type="text" id="pPrice" class="form-control" placeholder="15,000">
+                <input type="text" id="pPrice" class="form-control" placeholder="25,000">
             </div>
-            <button class="btn-main" onclick="addProduct()">حفظ المنتج</button>
-            <button class="tab-btn" style="background:#ef4444; width:100%; margin-top:8px;" onclick="closeAddProductModal()">إلغاء</button>
+            <div class="form-group">
+                <label class="form-label">وصف المنتج:</label>
+                <textarea id="pDesc" class="form-control" placeholder="تفاصيل المنتج، المقاسات، أو طريقة التحميل..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">رابط صورة المنتج (URL):</label>
+                <input type="text" id="pImage" class="form-control" placeholder="رابط صورة أو اتركها فارغة">
+            </div>
+            <button class="btn-main" onclick="saveProduct()">حفظ ونشر المنتج</button>
+        </div>
+    </div>
+
+    <!-- Modal: Admin Panel (For You as Programmer) -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="close-btn" onclick="closeModal('adminModal')">✕</button>
+            <h3 style="margin-bottom: 15px; color: var(--primary);">👑 لوحة تحكم المبرمج (أنتِ)</h3>
+            <div id="adminPanelContent" style="font-size: 0.85rem; color: #334155; line-height: 1.6;">
+                <!-- Admin details loaded dynamically -->
+            </div>
         </div>
     </div>
 
     <script>
-        let products = [];
+        // Data Store
+        let storeData = JSON.parse(localStorage.getItem('hor_store')) || null;
+        let allOrders = JSON.parse(localStorage.getItem('hor_orders')) || [];
+        let allComments = JSON.parse(localStorage.getItem('hor_comments')) || [];
 
-        function switchMainTab(tab) {
-            document.querySelectorAll('.navbar .tab-btn').forEach(b => b.classList.remove('active'));
-            if(tab === 'merchant') {
-                document.getElementById('merchantPanel').classList.add('active');
-                document.getElementById('storefrontPanel').classList.remove('active');
-                event.target.classList.add('active');
+        function openModal(id) {
+            if(id === 'profileModal') {
+                renderProfileModalContent();
+            } else if(id === 'adminModal') {
+                renderAdminContent();
+            }
+            document.getElementById(id).style.display = 'flex';
+        }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // Render Merchant Form or Store Panel
+        function renderProfileModalContent() {
+            let box = document.getElementById('modalBodyContent');
+            if(!storeData) {
+                box.innerHTML = `
+                    <h3 style="margin-bottom: 15px; color: var(--primary);">تسجيل متجر جديد على هور</h3>
+                    <div class="form-group"><label class="form-label">اسم المتجر:</label><input type="text" id="regName" class="form-control" placeholder="مثال: متجر عشتار"></div>
+                    <div class="form-group"><label class="form-label">رابط اللوكو (شعار المتجر):</label><input type="text" id="regLogo" class="form-control" placeholder="رابط الصورة أو رمز 🎨"></div>
+                    <div class="form-group"><label class="form-label">رقم الهاتف:</label><input type="text" id="regPhone" class="form-control" placeholder="07xxxxxxxxx"></div>
+                    <div class="form-group"><label class="form-label">البريد الإلكتروني:</label><input type="email" id="regEmail" class="form-control" placeholder="name@email.com"></div>
+                    <button class="btn-main" onclick="registerStore()">تسجيل المتجر الآن</button>
+                `;
             } else {
-                document.getElementById('merchantPanel').classList.remove('active');
-                document.getElementById('storefrontPanel').classList.add('active');
-                event.target.classList.add('active');
-                renderFrontProducts();
+                let prodHtml = '';
+                if(storeData.products.length === 0) {
+                    prodHtml = '<p style="color:#94a3b8; font-size:0.85rem; margin-top:8px;">لم تضف أي منتج بعد.</p>';
+                } else {
+                    storeData.products.forEach((p, idx) => {
+                        prodHtml += `
+                            <div class="product-card">
+                                <div>
+                                    <strong>${p.name}</strong> - <span style="color:var(--secondary);">${p.price} د.ع</span>
+                                    <div style="font-size:0.75rem; color:#64748b;">${p.desc}</div>
+                                </div>
+                                <button onclick="deleteProduct(${idx})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">حذف</button>
+                            </div>
+                        `;
+                    });
+                }
+
+                box.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:10px;">
+                        <div style="font-size:2rem;">${storeData.logo.startsWith('http') ? '<img src="'+storeData.logo+'" width="40" height="40" style="border-radius:50%"/>' : storeData.logo}</div>
+                        <div>
+                            <h3 style="color:var(--primary);">${storeData.name}</h3>
+                            <span style="font-size:0.75rem; color:#64748b;">البريد: ${storeData.email} | الهاتف: ${storeData.phone}</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <span style="font-size:0.85rem; font-weight:bold; color:#334155;">رابط متجرك الخاص:</span>
+                        <input type="text" class="form-control" readonly value="https://zahraaas313adam-code.github.io/hor/?store=${encodeURIComponent(storeData.name)}" style="font-size:0.75rem; background:#f1f5f9; margin-top:3px;">
+                    </div>
+                    <button class="btn-main" style="background:var(--secondary); margin-bottom:15px;" onclick="document.getElementById('productModal').style.display='flex'">+ أضف منتج جديد</button>
+                    <h4 style="font-size:0.9rem; color:#334155; margin-bottom:5px;">منتجات متجرك (${storeData.products.length}):</h4>
+                    ${prodHtml}
+                `;
             }
         }
 
-        function switchSubTab(sub) {
-            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('subProducts').style.display = 'none';
-            document.getElementById('subOrders').style.display = 'none';
-            document.getElementById('subSettings').style.display = 'none';
+        function registerStore() {
+            let name = document.getElementById('regName').value;
+            let logo = document.getElementById('regLogo').value || '🏪';
+            let phone = document.getElementById('regPhone').value;
+            let email = document.getElementById('regEmail').value;
 
-            if(sub === 'products') {
-                document.getElementById('subProducts').style.display = 'block';
-                event.target.classList.add('active');
-            } else if(sub === 'orders') {
-                document.getElementById('subOrders').style.display = 'block';
-                event.target.classList.add('active');
-            } else if(sub === 'settings') {
-                document.getElementById('subSettings').style.display = 'block';
-                event.target.classList.add('active');
-            }
+            if(!name || !phone) { alert("يرجى إكمال الحقول الأساسية!"); return; }
+
+            storeData = { name, logo, phone, email, products: [] };
+            localStorage.setItem('hor_store', JSON.stringify(storeData));
+            renderProfileModalContent();
+            alert("مبروك! تم إنشاء متجرك بنجاح 🎉");
         }
 
-        function saveStoreSettings() {
-            let name = document.getElementById('inputStoreName').value;
-            let desc = document.getElementById('inputStoreDesc').value;
-            
-            document.getElementById('displayStoreName').innerText = name;
-            document.getElementById('displayStoreDesc').innerText = desc;
-            document.getElementById('frontStoreName').innerText = name;
-            document.getElementById('frontStoreDesc').innerText = desc;
-            document.getElementById('displayStoreAvatar').innerText = name.substring(0, 2).toLowerCase();
-            
-            alert("تم حفظ إعدادات المتجر بنجاح! ✨");
-        }
-
-        function openAddProductModal() { document.getElementById('productModal').style.display = 'flex'; }
-        function closeAddProductModal() { document.getElementById('productModal').style.display = 'none'; }
-
-        function addProduct() {
+        function saveProduct() {
             let name = document.getElementById('pName').value;
             let price = document.getElementById('pPrice').value;
+            let desc = document.getElementById('pDesc').value;
+            let image = document.getElementById('pImage').value;
 
-            if(!name || !price) {
-                alert("يرجى ملء كافة الحقول!");
-                return;
-            }
+            if(!name || !price) { alert("أدخل اسم المنتج والسعر!"); return; }
 
-            products.push({ name, price });
-            closeAddProductModal();
-            renderMerchantProducts();
-            
-            document.getElementById('pName').value = '';
-            document.getElementById('pPrice').value = '';
-        }
-
-        function renderMerchantProducts() {
-            let list = document.getElementById('merchantProductsList');
-            if(products.length === 0) {
-                list.innerHTML = '<div class="empty-text">لا توجد منتجات بعد. أضف أول منتج لك.</div>';
-                return;
-            }
-            let html = '';
-            products.forEach((p, idx) => {
-                html += `
-                    <div class="product-card-item">
-                        <div>
-                            <strong>${p.name}</strong>
-                            <div style="color: var(--accent); font-size: 0.85rem; margin-top:2px;">${p.price} د.ع</div>
-                        </div>
-                        <button onclick="deleteProduct(${idx})" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem;">حذف</button>
-                    </div>
-                `;
-            });
-            list.innerHTML = html;
-        }
-
-        function renderFrontProducts() {
-            let list = document.getElementById('frontProductsList');
-            if(products.length === 0) {
-                list.innerHTML = '<div class="empty-text">لم يضف هذا المتجر أي منتجات بعد.</div>';
-                return;
-            }
-            let html = '';
-            products.forEach(p => {
-                html += `
-                    <div class="product-card-item">
-                        <div>
-                            <strong>${p.name}</strong>
-                            <div style="color: var(--accent); font-size: 0.85rem; margin-top:2px;">${p.price} د.ع</div>
-                        </div>
-                        <button style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem;" onclick="alert('تمت إضافة المنتج للسلة بنجاح')">شراء</button>
-                    </div>
-                `;
-            });
-            list.innerHTML = html;
+            storeData.products.push({ name, price, desc, image });
+            localStorage.setItem('hor_store', JSON.stringify(storeData));
+            closeModal('productModal');
+            renderProfileModalContent();
+            alert("تم إضافة المنتج ونشره بمتجرك بنجاح ✨");
         }
 
         function deleteProduct(idx) {
-            products.splice(idx, 1);
-            renderMerchantProducts();
+            storeData.products.splice(idx, 1);
+            localStorage.setItem('hor_store', JSON.stringify(storeData));
+            renderProfileModalContent();
+        }
+
+        // Programmer (Admin) Panel view
+        function renderAdminContent() {
+            let box = document.getElementById('adminPanelContent');
+            let storeInfo = storeData ? `<p><b>اسم المتجر المسجل:</b> ${storeData.name} (عدد المنتجات: ${storeData.products.length})</p><p><b>البريد والهاتف:</b> ${storeData.email} - ${storeData.phone}</p>` : `<p style="color:#94a3b8;">لا توجد متاجر مسجلة حالياً.</p>`;
+            
+            box.innerHTML = `
+                <div style="background:#f8fafc; padding:10px; border-radius:8px; margin-bottom:10px;">
+                    <h4 style="color:var(--primary); margin-bottom:5px;">📊 إحصائيات المتاجر والمنتجات:</h4>
+                    ${storeInfo}
+                </div>
+                <div style="background:#f8fafc; padding:10px; border-radius:8px; margin-bottom:10px;">
+                    <h4 style="color:var(--primary); margin-bottom:5px;">🛒 طلبات الزبائن والمشتريات:</h4>
+                    <p style="color:#94a3b8; font-size:0.8rem;">لا توجد طلبات شراء مسجلة حتى الآن.</p>
+                </div>
+                <div style="background:#f8fafc; padding:10px; border-radius:8px;">
+                    <h4 style="color:var(--primary); margin-bottom:5px;">💬 تعليقات وتقييمات الزبائن:</h4>
+                    <p style="color:#94a3b8; font-size:0.8rem;">لا توجد تعليقات حتى الآن.</p>
+                </div>
+            `;
+        }
+
+        // On Load check URL for store viewing
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetStore = urlParams.get('store');
+            if(targetStore && storeData && storeData.name === targetStore) {
+                let container = document.getElementById('mainContainer');
+                let prodsHtml = '';
+                storeData.products.forEach((p, i) => {
+                    prodsHtml += `
+                        <div class="product-card">
+                            <div>
+                                <strong>${p.name}</strong> - <span style="color:var(--secondary);">${p.price} د.ع</span>
+                                <div style="font-size:0.75rem; color:#64748b;">${p.desc}</div>
+                            </div>
+                            <button class="btn-main" style="width:auto; padding:6px 12px; font-size:0.8rem;" onclick="alert('تمت إضافة المنتج للسلة بنجاح!')">شراء</button>
+                        </div>
+                    `;
+                });
+                container.innerHTML = `
+                    <div class="panel">
+                        <h2>🏪 متجر: ${storeData.name}</h2>
+                        <p style="font-size:0.85rem; color:#64748b; margin-top:3px;">للتواصل مع التاجر: ${storeData.phone}</p>
+                        <hr style="margin:15px 0; border:0; border-top:1px solid var(--border);">
+                        <h4>منتجات المتجر المعروضة:</h4>
+                        ${prodsHtml || '<p style="color:#94a3b8; font-size:0.85rem; margin-top:10px;">هذا المتجر لم يضف منتجات بعد.</p>'}
+                    </div>
+                `;
+            }
         }
     </script>
 </body>
