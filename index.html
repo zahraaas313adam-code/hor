@@ -1,1531 +1,214 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>سوقنا | منصة متاجر إلكترونية متعددة المستأجرين</title>
-<meta name="description" content="منصة سوقنا: لوحة مشرف عام، لوحة تاجر، ومتجر إلكتروني عام — بالعربية، بالدينار العراقي، وبيانات محفوظة في المتصفح." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&family=Tajawal:wght@400;500;700&display=swap" />
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
-<style>
-  html, body, #root { height: 100%; }
-  body { margin: 0; font-family: 'Tajawal', sans-serif; }
-  #boot-fallback { display:flex; min-height:100vh; align-items:center; justify-content:center; color:#6B7280; font-family: 'Tajawal', sans-serif; padding: 24px; text-align:center; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سوقنا - منصة التجارة الإلكترونية</title>
+    <style>
+        :root { --primary: #0f172a; --accent: #2563eb; --bg: #f8fafc; --text: #334155; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; direction: rtl; }
+        header { background: var(--primary); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #60a5fa; cursor: pointer; }
+        nav button { background: none; border: none; color: white; font-size: 1rem; cursor: pointer; margin-left: 1rem; padding: 0.5rem 1rem; border-radius: 4px; transition: background 0.2s; }
+        nav button:hover { background: rgba(255,255,255,0.1); }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .hero { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 3rem 2rem; border-radius: 1rem; text-align: center; margin-bottom: 2rem; }
+        .hero h1 { margin: 0 0 1rem; font-size: 2.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { background: white; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card-img { height: 160px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #94a3b8; }
+        .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-title { font-size: 1.25rem; font-weight: bold; margin: 0 0 0.5rem; color: #0f172a; }
+        .card-price { color: #16a34a; font-weight: bold; font-size: 1.1rem; margin-bottom: 1rem; }
+        .btn { background: var(--accent); color: white; border: none; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; }
+        .btn:hover { background: #1d4ed8; }
+        .btn-success { background: #16a34a; }
+        .btn-success:hover { background: #15803d; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1rem; margin-bottom: 0.5rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .admin-form { background: white; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; box-sizing: border-box; }
+        .badge { background: #fee2e2; color: #dc2626; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; }
+    </style>
 </head>
 <body>
-<div id="root"><div id="boot-fallback">جارٍ تحميل سوقنا…</div></div>
-<script type="text/babel" data-presets="react">
-const { useState, useMemo, useEffect } = React;
 
-/* ------------------------------------------------------------
-   ICONS — small hand-drawn line icons (no external icon package),
-   kept under the same names the app uses so the rest of the code
-   is untouched.
-   ------------------------------------------------------------ */
-function makeIcon(paths) {
-  return function Icon({ className }) {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-        strokeLinecap="round" strokeLinejoin="round" className={className}>
-        {paths}
-      </svg>
-    );
-  };
-}
+    <header>
+        <div class="logo" onclick="showSection('home')">سوقنا 🛍️</div>
+        <nav>
+            <button onclick="showSection('home')">الرئيسية</button>
+            <button onclick="showSection('cart')">السلة (<span id="cart-count">0</span>)</button>
+            <button onclick="showSection('admin')">لوحة التاجر</button>
+        </nav>
+    </header>
 
-const Store = makeIcon(<><path d="M3 9.5L12 4l9 5.5" /><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" /></>);
-const Settings = makeIcon(<><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" /></>);
-const CheckCircle2 = makeIcon(<><circle cx="12" cy="12" r="9" /><path d="M8 12l3 3 5-6" /></>);
-const Ban = makeIcon(<><circle cx="12" cy="12" r="9" /><path d="M5.5 5.5l13 13" /></>);
-const Undo2 = makeIcon(<><path d="M9 14l-5-5 5-5" /><path d="M4 9h10a6 6 0 016 6v1" /></>);
-const Plus = makeIcon(<path d="M12 5v14M5 12h14" />);
-const Pencil = makeIcon(<><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z" /></>);
-const Trash2 = makeIcon(<><path d="M3 6h18" /><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" /><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" /><path d="M10 11v6M14 11v6" /></>);
-const Search = makeIcon(<><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></>);
-const X = makeIcon(<path d="M18 6L6 18M6 6l12 12" />);
-const ShoppingCart = makeIcon(<><circle cx="9" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.5 3h2l2.6 12.4a2 2 0 002 1.6h8.9a2 2 0 002-1.6L21 8H6" /></>);
-const Minus = makeIcon(<path d="M5 12h14" />);
-const TrendingUp = makeIcon(<><path d="M3 17l6-6 4 4 8-8" /><path d="M15 6h6v6" /></>);
-const DollarSign = makeIcon(<><path d="M12 2v20" /><path d="M17 6.5a4 4 0 00-4-2.5h-2a3.5 3.5 0 000 7h2a3.5 3.5 0 010 7H9a4 4 0 01-4-2.5" /></>);
-const Package = makeIcon(<><path d="M21 8l-9-5-9 5 9 5 9-5z" /><path d="M3 8v8l9 5 9-5V8" /><path d="M12 13v8" /></>);
-const ArrowLeft = makeIcon(<><path d="M19 12H5" /><path d="M11 18l-6-6 6-6" /></>);
-const ArrowRight = makeIcon(<><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></>);
-const CreditCard = makeIcon(<><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M2 10h20" /></>);
-const MapPin = makeIcon(<><path d="M12 22s7-7.5 7-12a7 7 0 10-14 0c0 4.5 7 12 7 12z" /><circle cx="12" cy="10" r="2.5" /></>);
-const Check = makeIcon(<path d="M20 6L9 17l-5-5" />);
-const Palette = makeIcon(<><path d="M12 2a10 10 0 100 20c1.4 0 2-1 2-2s-.5-1.4-.5-2.3 1-1.7 2-1.7H17a4 4 0 004-4 8.5 8.5 0 00-9-10z" /><circle cx="7.5" cy="10.5" r="1" /><circle cx="10.5" cy="7" r="1" /><circle cx="15" cy="7.5" r="1" /><circle cx="17" cy="11.5" r="1" /></>);
-const BarChart3 = makeIcon(<><path d="M3 3v18h18" /><rect x="7" y="12" width="3" height="6" /><rect x="12" y="8" width="3" height="10" /><rect x="17" y="5" width="3" height="13" /></>);
-const Globe = makeIcon(<><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a14 14 0 010 18" /><path d="M12 3a14 14 0 000 18" /></>);
-const ShieldCheck = makeIcon(<><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" /><path d="M9 12l2 2 4-4" /></>);
-const Truck = makeIcon(<><rect x="1" y="7" width="13" height="10" /><path d="M14 10h4l3 3v4h-7z" /><circle cx="6" cy="19" r="1.5" /><circle cx="17" cy="19" r="1.5" /></>);
-const AlertTriangle = makeIcon(<><path d="M12 3l10 18H2z" /><path d="M12 10v4" /><path d="M12 17h.01" /></>);
-const ClipboardList = makeIcon(<><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 2h6a1 1 0 011 1v2H8V3a1 1 0 011-1z" /><path d="M9 11h6M9 15h6M9 19h3" /></>);
-const SlidersHorizontal = makeIcon(<><path d="M4 6h9M17 6h3" /><path d="M4 12h3M11 12h9" /><path d="M4 18h11M19 18h1" /><circle cx="15" cy="6" r="2" /><circle cx="7" cy="12" r="2" /><circle cx="16" cy="18" r="2" /></>);
-const Boxes = makeIcon(<><path d="M21 8l-9-5-9 5 9 5 9-5z" /><path d="M3 8v8l9 5 9-5V8" /><path d="M12 13v8" /></>);
-
-/* ------------------------------------------------------------
-   MINI CHARTS — tiny self-contained SVG charts (no chart library),
-   used instead of recharts so this file needs zero build step.
-   ------------------------------------------------------------ */
-function MiniLineChart({ data, color, formatValue }) {
-  const w = 600, h = 220, pad = 28;
-  const values = data.map((d) => d.revenue);
-  const max = Math.max(...values, 1);
-  const min = Math.min(...values, 0);
-  const range = Math.max(max - min, 1);
-  const stepX = data.length > 1 ? (w - pad * 2) / (data.length - 1) : 0;
-  const points = data.map((d, i) => {
-    const x = pad + i * stepX;
-    const y = pad + (1 - (d.revenue - min) / range) * (h - pad * 2);
-    return [x, y];
-  });
-  const path = points.map((p, i) => (i === 0 ? `M${p[0]},${p[1]}` : `L${p[0]},${p[1]}`)).join(" ");
-  const areaPath = `${path} L${points[points.length - 1][0]},${h - pad} L${points[0][0]},${h - pad} Z`;
-
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: 240 }} preserveAspectRatio="none">
-      <line x1={pad} y1={h - pad} x2={w - pad} y2={h - pad} stroke={C.line} strokeWidth="1" />
-      <path d={areaPath} fill={color} opacity="0.08" />
-      <path d={path} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      {points.map((p, i) => (
-        <circle key={i} cx={p[0]} cy={p[1]} r="3" fill={color} />
-      ))}
-    </svg>
-  );
-}
-
-function MiniBarList({ data, color }) {
-  const max = Math.max(...data.map((d) => d.sold), 1);
-  return (
-    <div className="space-y-3" style={{ minHeight: 240 }}>
-      {data.map((d, i) => (
-        <div key={i}>
-          <div className="flex justify-between text-xs mb-1" style={{ color: C.slate }}>
-            <span>{d.name}</span>
-            <span style={{ color: C.ink }}>{d.sold}</span>
-          </div>
-          <div className="h-2.5 rounded-full" style={{ backgroundColor: C.paperAlt }}>
-            <div className="h-2.5 rounded-full" style={{ width: `${(d.sold / max) * 100}%`, backgroundColor: color }} />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ============================================================
-   DESIGN TOKENS
-   ============================================================ */
-const C = {
-  ink: "#1C1F26",
-  inkSoft: "#30343E",
-  paper: "#F5F2E9",
-  paperAlt: "#ECE6D6",
-  card: "#FFFFFF",
-  line: "#DED6C0",
-  marigold: "#E29B3E",
-  marigoldDark: "#B97A22",
-  marigoldSoft: "#FBEBD3",
-  sage: "#4C7A63",
-  sageSoft: "#E1EDE6",
-  rosewood: "#AF3D46",
-  rosewoodSoft: "#F6E1E1",
-  slate: "#6B7280",
-};
-
-const heading = { fontFamily: "'Cairo', sans-serif" };
-const FONT_LINK =
-  "@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&family=Tajawal:wght@400;500;700&display=swap');";
-
-const CURRENCY_META = {
-  IQD: { symbol: "د.ع", label: "دينار عراقي", decimals: 0, position: "suffix" },
-  USD: { symbol: "$", label: "دولار أمريكي", decimals: 2, position: "prefix" },
-  EUR: { symbol: "€", label: "يورو", decimals: 2, position: "prefix" },
-  GBP: { symbol: "£", label: "جنيه إسترليني", decimals: 2, position: "prefix" },
-  CAD: { symbol: "CA$", label: "دولار كندي", decimals: 2, position: "prefix" },
-};
-
-const CurrencyContext = React.createContext("IQD");
-
-const money = (n, currency = "IQD") => {
-  const meta = CURRENCY_META[currency] || CURRENCY_META.IQD;
-  const formatted = Number(n).toLocaleString("en-US", { minimumFractionDigits: meta.decimals, maximumFractionDigits: meta.decimals });
-  return meta.position === "prefix" ? `${meta.symbol}${formatted}` : `${formatted} ${meta.symbol}`;
-};
-
-const gradientFor = (seed, sat = 62, light = 52) => {
-  const h1 = (seed * 47) % 360;
-  const h2 = (h1 + 46) % 360;
-  return `linear-gradient(135deg, hsl(${h1} ${sat}% ${light}%), hsl(${h2} ${sat - 10}% ${light - 14}%))`;
-};
-
-const ACCENT_SWATCHES = ["#E29B3E", "#4C7A63", "#3B5B7A", "#8B5FBF", "#B5542C", "#C2495A"];
-const ORDER_STATUSES = ["pending", "processing", "shipped", "delivered", "cancelled"];
-
-const PRICE_RANGE = {
-  IQD: { min: 5000, max: 500000, step: 5000, default: 300000 },
-  default: { min: 10, max: 300, step: 5, default: 300 },
-};
-
-const STATUS_META = {
-  active: { bg: C.sageSoft, fg: C.sage, label: "نشط" },
-  delivered: { bg: C.sageSoft, fg: C.sage, label: "تم التسليم" },
-  shipped: { bg: "#E4EBF5", fg: "#3B5B7A", label: "تم الشحن" },
-  processing: { bg: "#E4EBF5", fg: "#3B5B7A", label: "قيد المعالجة" },
-  pending: { bg: C.marigoldSoft, fg: C.marigoldDark, label: "قيد الانتظار" },
-  draft: { bg: "#EFEBE1", fg: C.slate, label: "مسودة" },
-  blocked: { bg: C.rosewoodSoft, fg: C.rosewood, label: "محظور" },
-  cancelled: { bg: C.rosewoodSoft, fg: C.rosewood, label: "ملغي" },
-};
-
-const inputCls =
-  "w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 transition";
-
-/* ============================================================
-   PERSISTENT STORAGE (localStorage)
-   ============================================================
-   Keeps every piece of platform data (stores, products, orders,
-   settings, cart, current session) saved in the browser so a page
-   refresh or revisit never loses data or resets counters to zero. */
-const STORAGE_PREFIX = "souqna:";
-
-function readStorage(key, fallback) {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_PREFIX + key);
-    if (raw === null) return fallback;
-    return JSON.parse(raw);
-  } catch (err) {
-    console.warn(`تعذّرت قراءة "${key}" من التخزين المحلي، سيتم استخدام القيمة الافتراضية.`, err);
-    return fallback;
-  }
-}
-
-function usePersistentState(key, fallback) {
-  const [state, setState] = useState(() => readStorage(key, fallback));
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(state));
-    } catch (err) {
-      console.warn(`تعذّر حفظ "${key}" في التخزين المحلي (قد تكون المساحة ممتلئة).`, err);
-    }
-  }, [key, state]);
-
-  return [state, setState];
-}
-
-function clearAllStoredData() {
-  Object.keys(window.localStorage)
-    .filter((k) => k.startsWith(STORAGE_PREFIX))
-    .forEach((k) => window.localStorage.removeItem(k));
-  window.location.reload();
-}
-
-/* ============================================================
-   SMALL SHARED UI PIECES
-   ============================================================ */
-function StatusPill({ status }) {
-  const s = STATUS_META[status] || STATUS_META.pending;
-  return (
-    <span
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
-      style={{ backgroundColor: s.bg, color: s.fg }}
-    >
-      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: s.fg }} />
-      {s.label}
-    </span>
-  );
-}
-
-function StatCard({ icon: Icon, label, value, sub, tint }) {
-  return (
-    <div className="bg-white rounded-2xl border p-5 flex items-start justify-between" style={{ borderColor: C.line }}>
-      <div>
-        <p className="text-xs font-medium" style={{ color: C.slate }}>{label}</p>
-        <p className="text-2xl font-semibold mt-2" style={{ ...heading, color: C.ink }}>{value}</p>
-        {sub && <p className="text-xs mt-1" style={{ color: C.slate }}>{sub}</p>}
-      </div>
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: tint + "22" }}>
-        <Icon className="w-5 h-5" style={{ color: tint }} />
-      </div>
-    </div>
-  );
-}
-
-function Toast({ toast }) {
-  if (!toast) return null;
-  return (
-    <div className="fixed bottom-6 z-[100] px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium text-white"
-      style={{ backgroundColor: toast.type === "error" ? C.rosewood : C.ink, insetInlineEnd: "1.5rem" }}>
-      <Check className="w-4 h-4" />
-      {toast.message}
-    </div>
-  );
-}
-
-function Field({ label, children }) {
-  return (
-    <label className="block">
-      <span className="block text-xs font-medium mb-1.5" style={{ color: C.slate }}>{label}</span>
-      {children}
-    </label>
-  );
-}
-
-function LtrTag({ children }) {
-  return <span dir="ltr" className="inline-block">{children}</span>;
-}
-
-/* ============================================================
-   TOP BAR (ROLE SWITCHER)
-   ============================================================ */
-function TopBar({ role, setRole, platformName }) {
-  const tabs = [
-    { id: "super", label: "المشرف العام", icon: ShieldCheck },
-    { id: "merchant", label: "التاجر", icon: Store },
-    { id: "storefront", label: "المتجر", icon: Globe },
-  ];
-  return (
-    <div className="sticky top-0 z-50 border-b" style={{ backgroundColor: C.ink, borderColor: C.ink }}>
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex flex-col md:flex-row md:items-center gap-3 md:justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center font-semibold text-sm" style={{ backgroundColor: C.marigold, color: C.ink }}>
-            {platformName.slice(0, 1)}
-          </div>
-          <span className="text-white font-semibold text-[15px]" style={heading}>{platformName}</span>
-          <span className="hidden sm:inline text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: "#ffffff1a", color: "#C7CAD1" }}>
-            معاينة تجريبية
-          </span>
-        </div>
-        <div className="flex items-center gap-1 bg-white/10 rounded-xl p-1 w-full md:w-auto overflow-x-auto">
-          {tabs.map((t) => {
-            const active = role === t.id;
-            const Icon = t.icon;
-            return (
-              <button
-                key={t.id}
-                onClick={() => setRole(t.id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition"
-                style={active ? { backgroundColor: C.paper, color: C.ink } : { color: "#C7CAD1" }}
-              >
-                <Icon className="w-4 h-4" />
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ============================================================
-   SUPER ADMIN DASHBOARD
-   ============================================================ */
-function SuperAdmin({ stores, setStores, settings, setSettings, showToast }) {
-  const [q, setQ] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-
-  const filtered = stores.filter((s) => {
-    const matchesQ = (s.name + s.owner).toLowerCase().includes(q.toLowerCase());
-    const matchesStatus = statusFilter === "all" || s.status === statusFilter;
-    return matchesQ && matchesStatus;
-  });
-
-  const totals = {
-    stores: stores.length,
-    active: stores.filter((s) => s.status === "active").length,
-    pending: stores.filter((s) => s.status === "pending").length,
-    gmv: stores.reduce((a, s) => a + s.revenue, 0),
-  };
-
-  const setStatus = (id, status) => {
-    const store = stores.find((s) => s.id === id);
-    setStores((prev) => prev.map((s) => (s.id === id ? { ...s, status } : s)));
-    const msg = status === "active" ? `تمت الموافقة على ${store.name}` : status === "blocked" ? `تم حظر ${store.name}` : `تم تحديث ${store.name}`;
-    showToast(msg);
-  };
-
-  return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold" style={{ ...heading, color: C.ink }}>مركز التحكم</h1>
-        <p className="text-sm mt-1" style={{ color: C.slate }}>نظرة شاملة على كل متجر على منصة {settings.platformName}.</p>
-      </div>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Store} label="إجمالي المتاجر" value={totals.stores} tint={C.ink} />
-        <StatCard icon={CheckCircle2} label="المتاجر النشطة" value={totals.active} tint={C.sage} />
-        <StatCard icon={AlertTriangle} label="بانتظار الموافقة" value={totals.pending} tint={C.marigoldDark} />
-        <StatCard icon={DollarSign} label="إجمالي قيمة المبيعات" value={money(totals.gmv, settings.currency)} tint={C.marigold} />
-      </div>
-
-      <div className="bg-white rounded-2xl border" style={{ borderColor: C.line }}>
-        <div className="p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between border-b" style={{ borderColor: C.line }}>
-          <div>
-            <h2 className="font-semibold" style={{ ...heading, color: C.ink }}>إدارة المتاجر</h2>
-            <p className="text-xs mt-0.5" style={{ color: C.slate }}>وافق على المتاجر الجديدة أو احظر المتاجر المخالفة.</p>
-          </div>
-          <div className="flex gap-2 w-full sm:w-auto">
-            <div className="relative flex-1 sm:w-56">
-              <Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2" style={{ color: C.slate }} />
-              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="ابحث عن متجر أو مالك"
-                className={inputCls + " pr-9"} style={{ borderColor: C.line }} />
+    <div class="container">
+        <!-- قسم الرئيسية -->
+        <div id="home" class="section active">
+            <div class="hero">
+                <h1>مرحباً بك في منصة سوقنا</h1>
+                <p>وجهتك الأولى للتسوق الإلكتروني في العراق - أسعار بالدينار العراقي ودفع عند الاستلام</p>
             </div>
-            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
-              className={inputCls + " w-36"} style={{ borderColor: C.line }}>
-              <option value="all">كل الحالات</option>
-              <option value="active">نشط</option>
-              <option value="pending">بانتظار الموافقة</option>
-              <option value="blocked">محظور</option>
-            </select>
-          </div>
+            <h2>المنتجات المتوفرة</h2>
+            <div id="products-grid" class="grid">
+                <!-- المنتجات تضاف تلقائياً -->
+            </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-right border-b" style={{ borderColor: C.line, color: C.slate }}>
-                <th className="py-3 px-5 font-medium">المتجر</th>
-                <th className="py-3 px-5 font-medium">التصنيف</th>
-                <th className="py-3 px-5 font-medium">الخطة</th>
-                <th className="py-3 px-5 font-medium">الحالة</th>
-                <th className="py-3 px-5 font-medium">الإيرادات</th>
-                <th className="py-3 px-5 font-medium">تاريخ الانضمام</th>
-                <th className="py-3 px-5 font-medium text-left">الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((s) => (
-                <tr key={s.id} className="border-b last:border-0" style={{ borderColor: C.line }}>
-                  <td className="py-3 px-5">
-                    <p className="font-medium" style={{ color: C.ink }}>{s.name}</p>
-                    <p className="text-xs" style={{ color: C.slate }}>{s.owner} · <LtrTag>/store/{s.slug}</LtrTag></p>
-                  </td>
-                  <td className="py-3 px-5" style={{ color: C.slate }}>{s.category}</td>
-                  <td className="py-3 px-5" style={{ color: C.slate }}>{s.plan}</td>
-                  <td className="py-3 px-5"><StatusPill status={s.status} /></td>
-                  <td className="py-3 px-5" style={{ color: C.ink }}>{money(s.revenue, settings.currency)}</td>
-                  <td className="py-3 px-5" style={{ color: C.slate }}><LtrTag>{s.joined}</LtrTag></td>
-                  <td className="py-3 px-5">
-                    <div className="flex justify-end gap-2">
-                      {s.status === "pending" && (
-                        <>
-                          <button onClick={() => setStatus(s.id, "active")}
-                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white" style={{ backgroundColor: C.sage }}>
-                            <CheckCircle2 className="w-3.5 h-3.5" /> موافقة
-                          </button>
-                          <button onClick={() => setStatus(s.id, "blocked")}
-                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium" style={{ backgroundColor: C.rosewoodSoft, color: C.rosewood }}>
-                            <Ban className="w-3.5 h-3.5" /> رفض
-                          </button>
-                        </>
-                      )}
-                      {s.status === "active" && (
-                        <button onClick={() => setStatus(s.id, "blocked")}
-                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium" style={{ backgroundColor: C.rosewoodSoft, color: C.rosewood }}>
-                          <Ban className="w-3.5 h-3.5" /> حظر
-                        </button>
-                      )}
-                      {s.status === "blocked" && (
-                        <button onClick={() => setStatus(s.id, "active")}
-                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white" style={{ backgroundColor: C.ink }}>
-                          <Undo2 className="w-3.5 h-3.5" /> إلغاء الحظر
-                        </button>
-                      )}
+        <!-- قسم السلة -->
+        <div id="cart" class="section">
+            <h2>سلة المشتريات</h2>
+            <div id="cart-items"></div>
+            <div id="cart-total" style="margin-top: 1.5rem; font-size: 1.25rem; font-weight: bold;"></div>
+            <button class="btn btn-success" onclick="checkout()" style="margin-top: 1rem; max-width: 200px;">إتمام الطلب</button>
+        </div>
+
+        <!-- قسم لوحة التاجر -->
+        <div id="admin" class="section">
+            <h2>لوحة إدارة المتجر (إضافة منتج جديد)</h2>
+            <div class="admin-form">
+                <div class="form-group">
+                    <label>اسم المنتج</label>
+                    <input type="text" id="p-name" placeholder="مثال: حذاء رياضي أنيق">
+                </div>
+                <div class="form-group">
+                    <label>السعر (بالدينار العراقي)</label>
+                    <input type="number" id="p-price" placeholder="مثال: 25000">
+                </div>
+                <div class="form-group">
+                    <label>وصف مختصر</label>
+                    <textarea id="p-desc" placeholder="تفاصيل المنتج..."></textarea>
+                </div>
+                <button class="btn" onclick="addProduct()">إضافة المنتج للمتجر</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات المنتجات الافتراضية مع حفظ البيانات بـ localStorage
+        let products = JSON.parse(localStorage.getItem('souqna_products')) || [
+            id: 1, name: 'ساعة يد ذكية فاخرة', price: 35000, desc: 'ساعة ذكية مقاومة للماء مع شاشة ملونة عالية الدقة.' },
+            id: 2, name: 'سماعات بلوتوث لاسلكية', price: 20000, desc: 'صوت نقي وبطارية تدوم طويلاً.' },
+            id: 3, name: 'حذاء رياضي مريح', price: 45000, desc: 'تصميم عصري ومريح للاستخدام اليومي.' }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('souqna_cart')) || [];
+
+        function saveToStorage() {
+            localStorage.setItem('souqna_products', JSON.stringify(products));
+            localStorage.setItem('souqna_cart', JSON.stringify(cart));
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            if(sectionId === 'home') renderProducts();
+            if(sectionId === 'cart') renderCart();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="card-img">📦</div>
+                        <div class="card-body">
+                            <h3 class="card-title">${p.name}</h3>
+                            <p style="color: #64748b; font-size: 0.9rem; flex-grow: 1;">${p.desc}</p>
+                            <div class="card-price">${p.price.toLocaleString()} د.ع</div>
+                            <button class="btn" onclick="addToCart(${p.id})">إضافة للسلة</button>
+                        </div>
                     </div>
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="py-12 text-center text-sm" style={{ color: C.slate }}>
-                    {stores.length === 0
-                      ? "لا توجد متاجر على المنصة بعد. عندما ينشئ تاجر متجرًا جديدًا، سيظهر هنا للمراجعة والموافقة."
-                      : "لا توجد متاجر مطابقة لبحثك."}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <GlobalSettings settings={settings} setSettings={setSettings} showToast={showToast} />
-    </div>
-  );
-}
-
-function GlobalSettings({ settings, setSettings, showToast }) {
-  const [draft, setDraft] = useState(settings);
-  const [confirmReset, setConfirmReset] = useState(false);
-  const dirty = JSON.stringify(draft) !== JSON.stringify(settings);
-  const save = () => { setSettings(draft); showToast("تم حفظ الإعدادات العامة"); };
-
-  return (
-    <div className="bg-white rounded-2xl border p-6" style={{ borderColor: C.line }}>
-      <div className="flex items-center gap-2 mb-1">
-        <Settings className="w-4 h-4" style={{ color: C.slate }} />
-        <h2 className="font-semibold" style={{ ...heading, color: C.ink }}>الإعدادات العامة</h2>
-      </div>
-      <p className="text-xs mb-5" style={{ color: C.slate }}>الإعدادات الافتراضية التي تنطبق على كل متجر. تُحفظ جميع البيانات تلقائيًا على هذا الجهاز ولا تُفقد عند تحديث الصفحة.</p>
-
-      <div className="grid md:grid-cols-2 gap-5">
-        <Field label="اسم المنصة">
-          <input value={draft.platformName} onChange={(e) => setDraft({ ...draft, platformName: e.target.value })}
-            className={inputCls} style={{ borderColor: C.line }} />
-        </Field>
-        <Field label="البريد الإلكتروني للدعم">
-          <input value={draft.supportEmail} onChange={(e) => setDraft({ ...draft, supportEmail: e.target.value })}
-            className={inputCls} style={{ borderColor: C.line }} dir="ltr" />
-        </Field>
-        <Field label={`نسبة العمولة — ${draft.commission}%`}>
-          <input type="range" min="0" max="25" value={draft.commission}
-            onChange={(e) => setDraft({ ...draft, commission: Number(e.target.value) })}
-            className="w-full" style={{ accentColor: C.marigold }} />
-        </Field>
-        <Field label="العملة الافتراضية">
-          <select value={draft.currency} onChange={(e) => setDraft({ ...draft, currency: e.target.value })}
-            className={inputCls} style={{ borderColor: C.line }}>
-            {["IQD", "USD", "EUR", "GBP", "CAD"].map((code) => (
-              <option key={code} value={code}>{CURRENCY_META[code].label} ({code})</option>
-            ))}
-          </select>
-        </Field>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-3 mt-5">
-        <Toggle label="السماح بتسجيل متاجر جديدة" desc="يمكن للمتقدمين طلب إنشاء متجر جديد" checked={draft.allowSignups}
-          onChange={(v) => setDraft({ ...draft, allowSignups: v })} />
-        <Toggle label="وضع الصيانة" desc="تظهر المتاجر العامة رسالة مؤقتة للزوار" checked={draft.maintenance}
-          onChange={(v) => setDraft({ ...draft, maintenance: v })} />
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-3 mt-6">
-        <button onClick={save} disabled={!dirty}
-          className="px-4 py-2 rounded-lg text-sm font-medium text-white disabled:opacity-40"
-          style={{ backgroundColor: C.ink }}>
-          حفظ التغييرات
-        </button>
-        <button onClick={() => setConfirmReset(true)}
-          className="px-4 py-2 rounded-lg text-sm font-medium" style={{ backgroundColor: C.rosewoodSoft, color: C.rosewood }}>
-          إعادة تعيين المنصة بالكامل
-        </button>
-      </div>
-
-      {confirmReset && (
-        <ConfirmDialog
-          title="مسح جميع بيانات المنصة؟"
-          body="سيؤدي هذا إلى حذف كل المتاجر والمنتجات والطلبات والإعدادات المحفوظة على هذا الجهاز بشكل نهائي، وستبدأ المنصة من جديد فارغة تمامًا. لا يمكن التراجع عن هذا الإجراء."
-          confirmLabel="مسح كل البيانات"
-          danger
-          onCancel={() => setConfirmReset(false)}
-          onConfirm={clearAllStoredData}
-        />
-      )}
-    </div>
-  );
-}
-
-function Toggle({ label, desc, checked, onChange }) {
-  return (
-    <button onClick={() => onChange(!checked)}
-      className="flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-right"
-      style={{ borderColor: C.line }}>
-      <div>
-        <p className="text-sm font-medium" style={{ color: C.ink }}>{label}</p>
-        <p className="text-xs" style={{ color: C.slate }}>{desc}</p>
-      </div>
-      <span className="w-10 h-6 rounded-full p-0.5 shrink-0 transition" style={{ backgroundColor: checked ? C.sage : "#D8D3C4" }}>
-        <span className="block w-5 h-5 rounded-full bg-white transition" style={{ transform: checked ? "translateX(-16px)" : "translateX(0)" }} />
-      </span>
-    </button>
-  );
-}
-
-/* ============================================================
-   MERCHANT — CREATE STORE (empty-state onboarding)
-   ============================================================ */
-function CreateStoreScreen({ onCreate }) {
-  const [form, setForm] = useState({ name: "", category: "", owner: "" });
-  const [errors, setErrors] = useState({});
-
-  const submit = () => {
-    const errs = {};
-    if (!form.name.trim()) errs.name = "هذا الحقل مطلوب";
-    if (!form.category.trim()) errs.category = "هذا الحقل مطلوب";
-    if (!form.owner.trim()) errs.owner = "هذا الحقل مطلوب";
-    setErrors(errs);
-    if (Object.keys(errs).length) return;
-
-    const slug = "store-" + Date.now().toString().slice(-6);
-    onCreate({
-      id: Date.now(),
-      slug,
-      name: form.name.trim(),
-      owner: form.owner.trim(),
-      category: form.category.trim(),
-      status: "pending",
-      plan: "Starter",
-      revenue: 0,
-      orders: 0,
-      joined: new Date().toISOString().slice(0, 10),
-      accent: ACCENT_SWATCHES[0],
-      logoInitial: form.name.trim().slice(0, 2),
-      tagline: "أضف وصفًا مميزًا لمتجرك",
-      banner: "minimal",
-    });
-  };
-
-  return (
-    <div className="max-w-lg mx-auto bg-white rounded-2xl border p-7" style={{ borderColor: C.line }}>
-      <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: C.marigoldSoft }}>
-        <Store className="w-5 h-5" style={{ color: C.marigoldDark }} />
-      </div>
-      <h1 className="text-xl font-semibold" style={{ ...heading, color: C.ink }}>أنشئ متجرك</h1>
-      <p className="text-sm mt-1.5 mb-6" style={{ color: C.slate }}>أضف تفاصيل متجرك للبدء في البيع على المنصة. سيُرسل متجرك للمراجعة قبل ظهوره للعامة.</p>
-
-      <div className="space-y-4">
-        <Field label="اسم المتجر">
-          <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} style={{ borderColor: errors.name ? C.rosewood : C.line }} />
-          {errors.name && <p className="text-xs mt-1" style={{ color: C.rosewood }}>{errors.name}</p>}
-        </Field>
-        <Field label="التصنيف (مثل: أزياء، إلكترونيات، مستلزمات منزلية)">
-          <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputCls} style={{ borderColor: errors.category ? C.rosewood : C.line }} />
-          {errors.category && <p className="text-xs mt-1" style={{ color: C.rosewood }}>{errors.category}</p>}
-        </Field>
-        <Field label="اسم المالك">
-          <input value={form.owner} onChange={(e) => setForm({ ...form, owner: e.target.value })} className={inputCls} style={{ borderColor: errors.owner ? C.rosewood : C.line }} />
-          {errors.owner && <p className="text-xs mt-1" style={{ color: C.rosewood }}>{errors.owner}</p>}
-        </Field>
-      </div>
-
-      <button onClick={submit} className="w-full mt-6 py-2.5 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: C.ink }}>
-        إنشاء المتجر ومتابعة
-      </button>
-    </div>
-  );
-}
-
-/* ============================================================
-   MERCHANT DASHBOARD
-   ============================================================ */
-function MerchantDashboard({ store, setStores, products, setProducts, orders, setOrders, showToast }) {
-  const [tab, setTab] = useState("products");
-  const nav = [
-    { id: "products", label: "المنتجات", icon: Boxes },
-    { id: "orders", label: "الطلبات", icon: ClipboardList },
-    { id: "analytics", label: "التحليلات", icon: BarChart3 },
-    { id: "customize", label: "التخصيص", icon: Palette },
-  ];
-
-  const storeProducts = products.filter((pr) => pr.storeSlug === store.slug);
-  const storeOrders = orders.filter((o) => o.storeSlug === store.slug);
-
-  return (
-    <div>
-      <div className="mb-6 flex flex-wrap items-center gap-3">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-white font-semibold" style={{ backgroundColor: store.accent, ...heading }}>
-          {store.logoInitial}
-        </div>
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-semibold" style={{ ...heading, color: C.ink }}>{store.name}</h1>
-            <StatusPill status={store.status} />
-          </div>
-          <p className="text-sm" style={{ color: C.slate }}>لوحة التاجر · <LtrTag>/store/{store.slug}</LtrTag></p>
-        </div>
-      </div>
-
-      {store.status === "pending" && (
-        <div className="mb-6 rounded-xl border px-4 py-3 text-sm flex items-center gap-2" style={{ borderColor: C.line, backgroundColor: C.marigoldSoft, color: C.marigoldDark }}>
-          <AlertTriangle className="w-4 h-4 shrink-0" /> متجرك بانتظار موافقة المشرف العام. يمكنك تجهيز منتجاتك الآن وستظهر في المتجر العام بعد الموافقة.
-        </div>
-      )}
-      {store.status === "blocked" && (
-        <div className="mb-6 rounded-xl border px-4 py-3 text-sm flex items-center gap-2" style={{ borderColor: C.line, backgroundColor: C.rosewoodSoft, color: C.rosewood }}>
-          <Ban className="w-4 h-4 shrink-0" /> تم حظر متجرك من قبل المشرف العام وهو غير مرئي للعملاء حاليًا.
-        </div>
-      )}
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6 bg-white rounded-xl border p-1.5" style={{ borderColor: C.line }}>
-        {nav.map((n) => {
-          const Icon = n.icon;
-          const active = tab === n.id;
-          return (
-            <button key={n.id} onClick={() => setTab(n.id)}
-              className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-medium transition"
-              style={active ? { backgroundColor: C.ink, color: "white" } : { color: C.slate }}>
-              <Icon className="w-4 h-4" /> {n.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {tab === "products" && <ProductsTab products={storeProducts} setProducts={setProducts} storeSlug={store.slug} showToast={showToast} />}
-      {tab === "orders" && <OrdersTab orders={storeOrders} setOrders={setOrders} />}
-      {tab === "analytics" && <AnalyticsTab products={storeProducts} orders={storeOrders} />}
-      {tab === "customize" && <CustomizeTab store={store} setStores={setStores} showToast={showToast} />}
-    </div>
-  );
-}
-
-function ProductsTab({ products, setProducts, storeSlug, showToast }) {
-  const currency = React.useContext(CurrencyContext);
-  const [q, setQ] = useState("");
-  const [modal, setModal] = useState(null);
-  const [deleteId, setDeleteId] = useState(null);
-
-  const filtered = products.filter((p) => p.name.toLowerCase().includes(q.toLowerCase()));
-
-  const save = (data) => {
-    if (modal.mode === "add") {
-      setProducts((prev) => [...prev, { ...data, id: Date.now(), storeSlug, sold: 0 }]);
-      showToast("تمت إضافة المنتج");
-    } else {
-      setProducts((prev) => prev.map((p) => (p.id === modal.product.id ? { ...p, ...data } : p)));
-      showToast("تم تحديث المنتج");
-    }
-    setModal(null);
-  };
-
-  const remove = (id) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
-    setDeleteId(null);
-    showToast("تم حذف المنتج");
-  };
-
-  return (
-    <div className="bg-white rounded-2xl border" style={{ borderColor: C.line }}>
-      <div className="p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between border-b" style={{ borderColor: C.line }}>
-        <div className="relative flex-1 sm:max-w-xs">
-          <Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2" style={{ color: C.slate }} />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="ابحث عن منتج"
-            className={inputCls + " pr-9"} style={{ borderColor: C.line }} />
-        </div>
-        <button onClick={() => setModal({ mode: "add" })}
-          className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: C.ink }}>
-          <Plus className="w-4 h-4" /> إضافة منتج
-        </button>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-right border-b" style={{ borderColor: C.line, color: C.slate }}>
-              <th className="py-3 px-5 font-medium">المنتج</th>
-              <th className="py-3 px-5 font-medium">التصنيف</th>
-              <th className="py-3 px-5 font-medium">السعر</th>
-              <th className="py-3 px-5 font-medium">المخزون</th>
-              <th className="py-3 px-5 font-medium">الحالة</th>
-              <th className="py-3 px-5 font-medium text-left">الإجراءات</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((pr) => (
-              <tr key={pr.id} className="border-b last:border-0" style={{ borderColor: C.line }}>
-                <td className="py-3 px-5 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg shrink-0" style={{ background: gradientFor(pr.id) }} />
-                  <span className="font-medium" style={{ color: C.ink }}>{pr.name}</span>
-                </td>
-                <td className="py-3 px-5" style={{ color: C.slate }}>{pr.category}</td>
-                <td className="py-3 px-5" style={{ color: C.ink }}>{money(pr.price, currency)}</td>
-                <td className="py-3 px-5" style={{ color: pr.stock === 0 ? C.rosewood : C.slate }}>{pr.stock}</td>
-                <td className="py-3 px-5"><StatusPill status={pr.stock === 0 ? "draft" : pr.status} /></td>
-                <td className="py-3 px-5">
-                  <div className="flex justify-end gap-2">
-                    <button onClick={() => setModal({ mode: "edit", product: pr })} className="p-2 rounded-lg border" style={{ borderColor: C.line }}>
-                      <Pencil className="w-3.5 h-3.5" style={{ color: C.ink }} />
-                    </button>
-                    <button onClick={() => setDeleteId(pr.id)} className="p-2 rounded-lg border" style={{ borderColor: C.line }}>
-                      <Trash2 className="w-3.5 h-3.5" style={{ color: C.rosewood }} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {filtered.length === 0 && (
-              <tr>
-                <td colSpan={6} className="py-12 text-center text-sm" style={{ color: C.slate }}>
-                  {products.length === 0 ? "لا توجد منتجات بعد. أضف أول منتج لك." : "لا توجد منتجات مطابقة لبحثك."}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {modal && <ProductModal modal={modal} onClose={() => setModal(null)} onSave={save} />}
-
-      {deleteId && (
-        <ConfirmDialog
-          title="حذف هذا المنتج؟"
-          body="سيتم حذفه من كتالوجك ومن المتجر الإلكتروني العام. لا يمكن التراجع عن هذا الإجراء."
-          confirmLabel="حذف المنتج"
-          danger
-          onCancel={() => setDeleteId(null)}
-          onConfirm={() => remove(deleteId)}
-        />
-      )}
-    </div>
-  );
-}
-
-function ProductModal({ modal, onClose, onSave }) {
-  const currency = React.useContext(CurrencyContext);
-  const currencyMeta = CURRENCY_META[currency] || CURRENCY_META.IQD;
-  const editing = modal.product;
-  const [form, setForm] = useState({
-    name: editing?.name || "",
-    category: editing?.category || "",
-    price: editing?.price ?? "",
-    stock: editing?.stock ?? "",
-    status: editing?.status || "active",
-    description: editing?.description || "",
-  });
-  const [errors, setErrors] = useState({});
-
-  const submit = () => {
-    const errs = {};
-    if (!form.name.trim()) errs.name = "أدخل اسمًا للمنتج";
-    if (!form.category.trim()) errs.category = "اختر تصنيفًا";
-    if (!(Number(form.price) > 0)) errs.price = "أدخل سعرًا أكبر من صفر";
-    if (form.stock === "" || Number(form.stock) < 0) errs.stock = "أدخل الكمية المتوفرة في المخزون";
-    setErrors(errs);
-    if (Object.keys(errs).length) return;
-    onSave({ ...form, price: Number(form.price), stock: Number(form.stock) });
-  };
-
-  return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4" style={{ backgroundColor: "#1C1F2699" }}>
-      <div className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="p-5 border-b flex items-center justify-between" style={{ borderColor: C.line }}>
-          <h3 className="font-semibold" style={{ ...heading, color: C.ink }}>{modal.mode === "add" ? "إضافة منتج" : "تعديل المنتج"}</h3>
-          <button onClick={onClose}><X className="w-4 h-4" style={{ color: C.slate }} /></button>
-        </div>
-        <div className="p-5 space-y-4">
-          <Field label="اسم المنتج">
-            <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} style={{ borderColor: errors.name ? C.rosewood : C.line }} />
-            {errors.name && <p className="text-xs mt-1" style={{ color: C.rosewood }}>{errors.name}</p>}
-          </Field>
-          <div className="grid grid-cols-2 gap-4">
-            <Field label="التصنيف">
-              <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputCls} style={{ borderColor: errors.category ? C.rosewood : C.line }} />
-              {errors.category && <p className="text-xs mt-1" style={{ color: C.rosewood }}>{errors.category}</p>}
-            </Field>
-            <Field label="الحالة">
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className={inputCls} style={{ borderColor: C.line }}>
-                <option value="active">نشط</option>
-                <option value="draft">مسودة</option>
-              </select>
-            </Field>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Field label={`السعر (${currencyMeta.label})`}>
-              <input type="number" min="0" step={currencyMeta.decimals === 0 ? "250" : "0.01"} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className={inputCls} style={{ borderColor: errors.price ? C.rosewood : C.line }} dir="ltr" />
-              {errors.price && <p className="text-xs mt-1" style={{ color: C.rosewood }}>{errors.price}</p>}
-            </Field>
-            <Field label="المخزون">
-              <input type="number" min="0" value={form.stock} onChange={(e) => setForm({ ...form, stock: e.target.value })} className={inputCls} style={{ borderColor: errors.stock ? C.rosewood : C.line }} dir="ltr" />
-              {errors.stock && <p className="text-xs mt-1" style={{ color: C.rosewood }}>{errors.stock}</p>}
-            </Field>
-          </div>
-          <Field label="الوصف">
-            <textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className={inputCls} style={{ borderColor: C.line }} />
-          </Field>
-        </div>
-        <div className="p-5 border-t flex justify-end gap-2" style={{ borderColor: C.line }}>
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-sm font-medium border" style={{ borderColor: C.line, color: C.ink }}>إلغاء</button>
-          <button onClick={submit} className="px-4 py-2 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: C.ink }}>
-            {modal.mode === "add" ? "إضافة المنتج" : "حفظ التغييرات"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ConfirmDialog({ title, body, confirmLabel, danger, onCancel, onConfirm }) {
-  return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center p-4" style={{ backgroundColor: "#1C1F2699" }}>
-      <div className="bg-white rounded-2xl w-full max-w-sm p-5">
-        <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: danger ? C.rosewoodSoft : C.marigoldSoft }}>
-          <AlertTriangle className="w-5 h-5" style={{ color: danger ? C.rosewood : C.marigoldDark }} />
-        </div>
-        <h3 className="font-semibold" style={{ ...heading, color: C.ink }}>{title}</h3>
-        <p className="text-sm mt-1.5" style={{ color: C.slate }}>{body}</p>
-        <div className="flex justify-end gap-2 mt-5">
-          <button onClick={onCancel} className="px-4 py-2 rounded-lg text-sm font-medium border" style={{ borderColor: C.line, color: C.ink }}>إلغاء</button>
-          <button onClick={onConfirm} className="px-4 py-2 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: danger ? C.rosewood : C.ink }}>{confirmLabel}</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function OrdersTab({ orders, setOrders }) {
-  const currency = React.useContext(CurrencyContext);
-  const setStatus = (id, status) => setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
-  return (
-    <div className="bg-white rounded-2xl border overflow-x-auto" style={{ borderColor: C.line }}>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="text-right border-b" style={{ borderColor: C.line, color: C.slate }}>
-            <th className="py-3 px-5 font-medium">رقم الطلب</th>
-            <th className="py-3 px-5 font-medium">العميل</th>
-            <th className="py-3 px-5 font-medium">المنتجات</th>
-            <th className="py-3 px-5 font-medium">الإجمالي</th>
-            <th className="py-3 px-5 font-medium">التاريخ</th>
-            <th className="py-3 px-5 font-medium">الحالة</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((o) => (
-            <tr key={o.id} className="border-b last:border-0" style={{ borderColor: C.line }}>
-              <td className="py-3 px-5 font-medium" style={{ color: C.ink }}><LtrTag>{o.id}</LtrTag></td>
-              <td className="py-3 px-5" style={{ color: C.slate }}>{o.customer}</td>
-              <td className="py-3 px-5" style={{ color: C.slate }}>{o.items.map((i) => `${i.name} ×${i.qty}`).join("، ")}</td>
-              <td className="py-3 px-5" style={{ color: C.ink }}>{money(o.total, currency)}</td>
-              <td className="py-3 px-5" style={{ color: C.slate }}><LtrTag>{o.date}</LtrTag></td>
-              <td className="py-3 px-5">
-                <select value={o.status} onChange={(e) => setStatus(o.id, e.target.value)}
-                  className="text-xs font-medium rounded-full px-2.5 py-1.5 border focus:outline-none"
-                  style={{ borderColor: C.line, color: C.ink }}>
-                  {ORDER_STATUSES.map((s) => <option key={s} value={s}>{STATUS_META[s].label}</option>)}
-                </select>
-              </td>
-            </tr>
-          ))}
-          {orders.length === 0 && (
-            <tr><td colSpan={6} className="py-12 text-center text-sm" style={{ color: C.slate }}>لا توجد طلبات بعد. ستظهر الطلبات هنا فور شراء العملاء من متجرك.</td></tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function AnalyticsTab({ products, orders }) {
-  const currency = React.useContext(CurrencyContext);
-  const validOrders = orders.filter((o) => o.status !== "cancelled");
-  const revenue = validOrders.reduce((a, o) => a + o.total, 0);
-  const aov = revenue / Math.max(1, validOrders.length);
-
-  const trend = useMemo(() => {
-    const map = {};
-    validOrders.forEach((o) => { map[o.date] = (map[o.date] || 0) + o.total; });
-    return Object.entries(map).sort((a, b) => a[0].localeCompare(b[0])).map(([date, revenue]) => ({ date, revenue }));
-  }, [validOrders]);
-
-  const topProducts = [...products].filter((p) => p.sold > 0).sort((a, b) => b.sold - a.sold).slice(0, 6)
-    .map((p) => ({ name: p.name.split(" ").slice(0, 2).join(" "), sold: p.sold }));
-
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={DollarSign} label="الإيرادات" value={money(revenue, currency)} tint={C.marigold} />
-        <StatCard icon={ClipboardList} label="الطلبات" value={orders.length} tint={C.ink} />
-        <StatCard icon={TrendingUp} label="متوسط قيمة الطلب" value={money(aov, currency)} tint={C.sage} />
-        <StatCard icon={Package} label="معدل التحويل" value={orders.length > 0 ? "3.2%" : "—"} tint={C.slate} />
-      </div>
-
-      <div className="grid lg:grid-cols-5 gap-4">
-        <div className="lg:col-span-3 bg-white rounded-2xl border p-5" style={{ borderColor: C.line }}>
-          <h3 className="font-semibold mb-4" style={{ ...heading, color: C.ink }}>الإيرادات حسب اليوم</h3>
-          {trend.length === 0 ? (
-            <div className="h-[240px] flex items-center justify-center text-sm text-center px-6" style={{ color: C.slate }}>
-              ستظهر تحليلات المبيعات هنا بعد أول عملية بيع.
-            </div>
-          ) : (
-            <MiniLineChart data={trend} color={C.marigoldDark} />
-          )}
-        </div>
-        <div className="lg:col-span-2 bg-white rounded-2xl border p-5" style={{ borderColor: C.line }}>
-          <h3 className="font-semibold mb-4" style={{ ...heading, color: C.ink }}>أكثر المنتجات مبيعًا</h3>
-          {topProducts.length === 0 ? (
-            <div className="h-[240px] flex items-center justify-center text-sm text-center px-6" style={{ color: C.slate }}>
-              سيظهر أكثر المنتجات مبيعًا هنا بعد أول طلب.
-            </div>
-          ) : (
-            <MiniBarList data={topProducts} color={C.sage} />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CustomizeTab({ store, setStores, showToast }) {
-  const [draft, setDraft] = useState({
-    name: store.name, tagline: store.tagline, accent: store.accent, logoInitial: store.logoInitial, banner: store.banner,
-  });
-  const dirty = JSON.stringify(draft) !== JSON.stringify({
-    name: store.name, tagline: store.tagline, accent: store.accent, logoInitial: store.logoInitial, banner: store.banner,
-  });
-
-  const save = () => {
-    setStores((prev) => prev.map((s) => (s.slug === store.slug ? { ...s, ...draft } : s)));
-    showToast("تم تحديث المتجر — تحقق من تبويب المتجر");
-  };
-
-  return (
-    <div className="grid lg:grid-cols-2 gap-5">
-      <div className="bg-white rounded-2xl border p-6 space-y-5" style={{ borderColor: C.line }}>
-        <h3 className="font-semibold" style={{ ...heading, color: C.ink }}>تخصيص المتجر</h3>
-        <Field label="اسم المتجر">
-          <input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} className={inputCls} style={{ borderColor: C.line }} />
-        </Field>
-        <Field label="الوصف التعريفي">
-          <input value={draft.tagline} onChange={(e) => setDraft({ ...draft, tagline: e.target.value })} className={inputCls} style={{ borderColor: C.line }} />
-        </Field>
-        <Field label="الحروف الأولى للشعار (حرفان كحد أقصى)">
-          <input maxLength={2} value={draft.logoInitial} onChange={(e) => setDraft({ ...draft, logoInitial: e.target.value })} className={inputCls + " w-24"} style={{ borderColor: C.line }} />
-        </Field>
-        <Field label="اللون المميز">
-          <div className="flex gap-2">
-            {ACCENT_SWATCHES.map((c) => (
-              <button key={c} onClick={() => setDraft({ ...draft, accent: c })}
-                className="w-9 h-9 rounded-full border-2"
-                style={{ backgroundColor: c, borderColor: draft.accent === c ? C.ink : "transparent" }} />
-            ))}
-          </div>
-        </Field>
-        <Field label="نمط البانر">
-          <div className="flex gap-2">
-            {[{ id: "minimal", label: "بسيط" }, { id: "bold", label: "بارز" }].map((b) => (
-              <button key={b.id} onClick={() => setDraft({ ...draft, banner: b.id })}
-                className="px-3 py-1.5 rounded-lg text-sm font-medium border"
-                style={{ borderColor: draft.banner === b.id ? C.ink : C.line, backgroundColor: draft.banner === b.id ? C.ink : "white", color: draft.banner === b.id ? "white" : C.ink }}>
-                {b.label}
-              </button>
-            ))}
-          </div>
-        </Field>
-        <button onClick={save} disabled={!dirty}
-          className="px-4 py-2 rounded-lg text-sm font-medium text-white disabled:opacity-40" style={{ backgroundColor: C.ink }}>
-          حفظ ونشر
-        </button>
-      </div>
-
-      <div className="bg-white rounded-2xl border p-6" style={{ borderColor: C.line }}>
-        <h3 className="font-semibold mb-4" style={{ ...heading, color: C.ink }}>معاينة مباشرة</h3>
-        <div className="rounded-xl overflow-hidden border" style={{ borderColor: C.line }}>
-          <div className={draft.banner === "bold" ? "p-8" : "p-6"} style={{ backgroundColor: draft.banner === "bold" ? draft.accent : C.paper }}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center font-semibold" style={{ backgroundColor: draft.banner === "bold" ? "white" : draft.accent, color: draft.banner === "bold" ? draft.accent : "white", ...heading }}>
-                {draft.logoInitial}
-              </div>
-              <div>
-                <p className="font-semibold" style={{ ...heading, color: draft.banner === "bold" ? "white" : C.ink }}>{draft.name}</p>
-                <p className="text-xs" style={{ color: draft.banner === "bold" ? "#ffffffcc" : C.slate }}>{draft.tagline}</p>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 grid grid-cols-3 gap-2 bg-white">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="aspect-square rounded-lg" style={{ background: gradientFor(i * 7) }} />
-            ))}
-          </div>
-        </div>
-        <p className="text-xs mt-3" style={{ color: C.slate }}>تعكس هذه المعاينة رأس متجرك كما يراه عملاؤك على الواجهة العامة.</p>
-      </div>
-    </div>
-  );
-}
-
-/* ============================================================
-   PUBLIC STOREFRONT
-   ============================================================ */
-function EmptyStorefront({ onGoMerchant }) {
-  return (
-    <div className="bg-white rounded-2xl border p-14 text-center" style={{ borderColor: C.line }}>
-      <div className="w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4" style={{ backgroundColor: C.paperAlt }}>
-        <Globe className="w-6 h-6" style={{ color: C.slate }} />
-      </div>
-      <h2 className="text-lg font-semibold" style={{ ...heading, color: C.ink }}>لا توجد متاجر متاحة بعد</h2>
-      <p className="text-sm mt-2 max-w-sm mx-auto" style={{ color: C.slate }}>
-        بمجرد أن يُنشئ تاجر متجره ويحصل على موافقة المشرف العام، سيظهر هنا للعملاء.
-      </p>
-      <button onClick={onGoMerchant} className="mt-5 px-4 py-2.5 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: C.ink }}>
-        أنشئ متجرك الآن
-      </button>
-    </div>
-  );
-}
-
-function Storefront({ stores, products, currentSlug, setCurrentSlug, cart, setCart, orders, setOrders, setProducts, showToast, onGoMerchant }) {
-  const currency = React.useContext(CurrencyContext);
-  const priceRange = PRICE_RANGE[currency] || PRICE_RANGE.default;
-  const activeStores = stores.filter((s) => s.status === "active");
-  const effectiveSlug = activeStores.some((s) => s.slug === currentSlug) ? currentSlug : (activeStores[0]?.slug || null);
-  const store = stores.find((s) => s.slug === effectiveSlug);
-
-  const [search, setSearch] = useState("");
-  const [activeCats, setActiveCats] = useState([]);
-  const [maxPrice, setMaxPrice] = useState(priceRange.default);
-  const [sort, setSort] = useState("featured");
-  const [showFilters, setShowFilters] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
-  const [checkout, setCheckout] = useState(false);
-
-  if (!store) return <EmptyStorefront onGoMerchant={onGoMerchant} />;
-
-  const storeProducts = products.filter((p) => p.storeSlug === store.slug);
-  const categories = [...new Set(storeProducts.map((p) => p.category))];
-
-  const toggleCat = (c) => setActiveCats((prev) => (prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]));
-
-  const filtered = useMemo(() => {
-    let list = storeProducts.filter((p) =>
-      p.name.toLowerCase().includes(search.toLowerCase()) &&
-      (activeCats.length === 0 || activeCats.includes(p.category)) &&
-      p.price <= maxPrice
-    );
-    if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
-    if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
-    if (sort === "name") list = [...list].sort((a, b) => a.name.localeCompare(b.name));
-    return list;
-  }, [storeProducts, search, activeCats, maxPrice, sort]);
-
-  const addToCart = (product) => {
-    if (product.stock === 0) return;
-    setCart((prev) => {
-      const existing = prev.find((i) => i.id === product.id);
-      if (existing) return prev.map((i) => (i.id === product.id ? { ...i, qty: Math.min(i.qty + 1, product.stock) } : i));
-      return [...prev, { id: product.id, name: product.name, price: product.price, qty: 1, stock: product.stock }];
-    });
-    showToast(`تمت إضافة ${product.name} إلى السلة`);
-  };
-
-  const cartCount = cart.reduce((a, i) => a + i.qty, 0);
-  const subtotal = cart.reduce((a, i) => a + i.qty * i.price, 0);
-
-  const switchStore = (slug) => {
-    setCurrentSlug(slug);
-    setCart([]);
-    setCartOpen(false);
-    setActiveCats([]);
-    setSearch("");
-  };
-
-  const handlePlaceOrder = (shipping) => {
-    const orderId = "ORD-" + Math.floor(100000 + Math.random() * 899999);
-    setOrders((prev) => [
-      { id: orderId, storeSlug: store.slug, customer: shipping.name, items: cart.map((i) => ({ name: i.name, qty: i.qty })), total: subtotal + (currency === "IQD" ? 5000 : 6.5) + subtotal * 0.08, status: "pending", date: new Date().toISOString().slice(0, 10) },
-      ...prev,
-    ]);
-    setProducts((prev) => prev.map((p) => {
-      const item = cart.find((i) => i.id === p.id);
-      if (!item) return p;
-      return { ...p, stock: Math.max(0, p.stock - item.qty), sold: (p.sold || 0) + item.qty };
-    }));
-    return orderId;
-  };
-
-  return (
-    <div className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: C.line }}>
-      {/* fake browser bar */}
-      <div className="flex items-center gap-3 px-4 py-2.5 border-b" style={{ backgroundColor: C.paperAlt, borderColor: C.line }}>
-        <div className="flex gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#E4A2A2" }} />
-          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#E9CD9B" }} />
-          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#A7CDB2" }} />
-        </div>
-        <div className="flex-1 bg-white rounded-md px-3 py-1 text-xs" style={{ color: C.slate }}>
-          <LtrTag>souqna.app/store/{store.slug}</LtrTag>
-        </div>
-        <select value={store.slug} onChange={(e) => switchStore(e.target.value)}
-          className="text-xs font-medium rounded-md px-2 py-1.5 border" style={{ borderColor: C.line, color: C.ink }}>
-          {activeStores.map((s) => (
-            <option key={s.slug} value={s.slug}>{s.name}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* storefront header */}
-      <div className={store.banner === "bold" ? "p-8 md:p-12" : "p-6 md:p-10"} style={{ backgroundColor: store.banner === "bold" ? store.accent : C.paper }}>
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center font-semibold text-lg"
-              style={{ backgroundColor: store.banner === "bold" ? "white" : store.accent, color: store.banner === "bold" ? store.accent : "white", ...heading }}>
-              {store.logoInitial}
-            </div>
-            <div>
-              <h1 className="text-2xl font-semibold" style={{ ...heading, color: store.banner === "bold" ? "white" : C.ink }}>{store.name}</h1>
-              <p className="text-sm" style={{ color: store.banner === "bold" ? "#ffffffd0" : C.slate }}>{store.tagline}</p>
-            </div>
-          </div>
-          <button onClick={() => setCartOpen(true)}
-            className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium self-start md:self-auto"
-            style={{ backgroundColor: store.banner === "bold" ? "white" : store.accent, color: store.banner === "bold" ? store.accent : "white" }}>
-            <ShoppingCart className="w-4 h-4" /> السلة
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -left-2 w-5 h-5 rounded-full text-[11px] flex items-center justify-center text-white" style={{ backgroundColor: C.rosewood }}>{cartCount}</span>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* catalog */}
-      <div className="p-5 md:p-8 grid md:grid-cols-[220px_1fr] gap-6">
-        <button onClick={() => setShowFilters((v) => !v)} className="md:hidden flex items-center justify-between px-3 py-2 rounded-lg border text-sm font-medium" style={{ borderColor: C.line, color: C.ink }}>
-          الفلاتر <SlidersHorizontal className="w-4 h-4" />
-        </button>
-
-        <aside className={(showFilters ? "block" : "hidden") + " md:block space-y-6"}>
-          <div>
-            <p className="text-xs font-medium mb-2" style={{ color: C.slate }}>بحث</p>
-            <div className="relative">
-              <Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2" style={{ color: C.slate }} />
-              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="ابحث عن منتج"
-                className={inputCls + " pr-9"} style={{ borderColor: C.line }} />
-            </div>
-          </div>
-          <div>
-            <p className="text-xs font-medium mb-2" style={{ color: C.slate }}>التصنيف</p>
-            <div className="space-y-1.5">
-              {categories.length === 0 && <p className="text-xs" style={{ color: C.slate }}>لا توجد تصنيفات بعد.</p>}
-              {categories.map((c) => (
-                <label key={c} className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: C.ink }}>
-                  <input type="checkbox" checked={activeCats.includes(c)} onChange={() => toggleCat(c)} className="rounded" style={{ accentColor: store.accent }} />
-                  {c}
-                </label>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="text-xs font-medium mb-2" style={{ color: C.slate }}>أقصى سعر — {money(maxPrice, currency)}</p>
-            <input type="range" min={priceRange.min} max={priceRange.max} step={priceRange.step} value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full" style={{ accentColor: store.accent }} />
-          </div>
-          <div>
-            <p className="text-xs font-medium mb-2" style={{ color: C.slate }}>الترتيب حسب</p>
-            <select value={sort} onChange={(e) => setSort(e.target.value)} className={inputCls} style={{ borderColor: C.line }}>
-              <option value="featured">المميز</option>
-              <option value="price-asc">السعر: من الأقل إلى الأعلى</option>
-              <option value="price-desc">السعر: من الأعلى إلى الأقل</option>
-              <option value="name">الاسم أ-ي</option>
-            </select>
-          </div>
-        </aside>
-
-        <div>
-          <p className="text-sm mb-4" style={{ color: C.slate }}>{filtered.length} منتج</p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((p) => (
-              <div key={p.id} className="rounded-xl border overflow-hidden flex flex-col" style={{ borderColor: C.line }}>
-                <div className="aspect-[4/3]" style={{ background: gradientFor(p.id) }} />
-                <div className="p-4 flex flex-col gap-1 flex-1">
-                  <p className="text-xs" style={{ color: C.slate }}>{p.category}</p>
-                  <p className="font-medium text-sm" style={{ color: C.ink }}>{p.name}</p>
-                  <p className="text-sm font-semibold mt-1" style={{ color: C.ink }}>{money(p.price, currency)}</p>
-                  <button onClick={() => addToCart(p)} disabled={p.stock === 0}
-                    className="mt-auto pt-3 text-sm font-medium rounded-lg py-2 disabled:opacity-40"
-                    style={{ backgroundColor: p.stock === 0 ? C.paperAlt : store.accent, color: p.stock === 0 ? C.slate : "white" }}>
-                    {p.stock === 0 ? "نفدت الكمية" : "أضف إلى السلة"}
-                  </button>
-                </div>
-              </div>
-            ))}
-            {filtered.length === 0 && (
-              <div className="col-span-full py-16 text-center text-sm" style={{ color: C.slate }}>
-                {storeProducts.length === 0 ? "لم يضف هذا المتجر أي منتجات بعد." : "لا توجد منتجات مطابقة لفلاترك. حاول توسيع نطاق البحث."}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {cartOpen && (
-        <CartDrawer cart={cart} setCart={setCart} subtotal={subtotal} accent={store.accent}
-          onClose={() => setCartOpen(false)} onCheckout={() => { setCartOpen(false); setCheckout(true); }} />
-      )}
-      {checkout && (
-        <CheckoutModal cart={cart} setCart={setCart} subtotal={subtotal} accent={store.accent} storeName={store.name}
-          onClose={() => setCheckout(false)} onPlaceOrder={handlePlaceOrder} />
-      )}
-    </div>
-  );
-}
-
-function CartDrawer({ cart, setCart, subtotal, accent, onClose, onCheckout }) {
-  const currency = React.useContext(CurrencyContext);
-  const updateQty = (id, qty) => setCart((prev) => prev.map((i) => (i.id === id ? { ...i, qty: Math.max(1, Math.min(qty, i.stock)) } : i)));
-  const removeItem = (id) => setCart((prev) => prev.filter((i) => i.id !== id));
-
-  return (
-    <div className="fixed inset-0 z-[70] flex justify-start">
-      <div className="absolute inset-0" style={{ backgroundColor: "#1C1F2699" }} onClick={onClose} />
-      <div className="relative w-full max-w-sm bg-white h-full flex flex-col shadow-2xl">
-        <div className="p-5 border-b flex items-center justify-between" style={{ borderColor: C.line }}>
-          <h3 className="font-semibold flex items-center gap-2" style={{ ...heading, color: C.ink }}><ShoppingCart className="w-4 h-4" /> سلة التسوق</h3>
-          <button onClick={onClose}><X className="w-4 h-4" style={{ color: C.slate }} /></button>
-        </div>
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          {cart.length === 0 && <p className="text-sm text-center py-16" style={{ color: C.slate }}>سلة التسوق فارغة. أضف شيئًا يعجبك.</p>}
-          {cart.map((item) => (
-            <div key={item.id} className="flex gap-3">
-              <div className="w-14 h-14 rounded-lg shrink-0" style={{ background: gradientFor(item.id) }} />
-              <div className="flex-1">
-                <p className="text-sm font-medium" style={{ color: C.ink }}>{item.name}</p>
-                <p className="text-xs" style={{ color: C.slate }}>{money(item.price, currency)} للقطعة</p>
-                <div className="flex items-center gap-2 mt-1.5">
-                  <button onClick={() => updateQty(item.id, item.qty - 1)} className="w-6 h-6 rounded-md border flex items-center justify-center" style={{ borderColor: C.line }}><Minus className="w-3 h-3" /></button>
-                  <span className="text-sm w-5 text-center">{item.qty}</span>
-                  <button onClick={() => updateQty(item.id, item.qty + 1)} className="w-6 h-6 rounded-md border flex items-center justify-center" style={{ borderColor: C.line }}><Plus className="w-3 h-3" /></button>
-                  <button onClick={() => removeItem(item.id)} className="mr-auto text-xs" style={{ color: C.rosewood }}>إزالة</button>
-                </div>
-              </div>
-              <p className="text-sm font-medium" style={{ color: C.ink }}>{money(item.price * item.qty, currency)}</p>
-            </div>
-          ))}
-        </div>
-        <div className="p-5 border-t space-y-3" style={{ borderColor: C.line }}>
-          <div className="flex justify-between text-sm" style={{ color: C.slate }}>
-            <span>المجموع الفرعي</span><span style={{ color: C.ink }} className="font-medium">{money(subtotal, currency)}</span>
-          </div>
-          <button onClick={onCheckout} disabled={cart.length === 0}
-            className="w-full py-3 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ backgroundColor: accent }}>
-            إتمام الشراء
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CheckoutModal({ cart, setCart, subtotal, accent, storeName, onClose, onPlaceOrder }) {
-  const currency = React.useContext(CurrencyContext);
-  const [step, setStep] = useState(0);
-  const [shipping, setShipping] = useState({ name: "", email: "", address: "", city: "", zip: "" });
-  const [payment, setPayment] = useState({ card: "", expiry: "", cvc: "" });
-  const [errors, setErrors] = useState({});
-  const [orderNumber, setOrderNumber] = useState("");
-
-  const shippingFee = currency === "IQD" ? 5000 : 6.5;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shippingFee + tax;
-
-  const validateShipping = () => {
-    const e = {};
-    if (!shipping.name.trim()) e.name = "هذا الحقل مطلوب";
-    if (!/^\S+@\S+\.\S+$/.test(shipping.email)) e.email = "أدخل بريدًا إلكترونيًا صالحًا";
-    if (!shipping.address.trim()) e.address = "هذا الحقل مطلوب";
-    if (!shipping.city.trim()) e.city = "هذا الحقل مطلوب";
-    if (!/^\d{4,6}$/.test(shipping.zip)) e.zip = "أدخل رمزًا بريديًا صالحًا";
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
-
-  const validatePayment = () => {
-    const e = {};
-    if (!/^\d{13,19}$/.test(payment.card.replace(/\s/g, ""))) e.card = "أدخل رقم بطاقة صالحًا";
-    if (!/^\d{2}\/\d{2}$/.test(payment.expiry)) e.expiry = "الصيغة: MM/YY";
-    if (!/^\d{3,4}$/.test(payment.cvc)) e.cvc = "٣ إلى ٤ أرقام";
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
-
-  const placeOrder = () => {
-    if (!validatePayment()) return;
-    const id = onPlaceOrder(shipping);
-    setOrderNumber(id);
-    setStep(3);
-  };
-
-  const finish = () => { setCart([]); onClose(); };
-
-  return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center p-4" style={{ backgroundColor: "#1C1F2699" }}>
-      <div className="bg-white rounded-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto">
-        <div className="p-5 border-b flex items-center justify-between" style={{ borderColor: C.line }}>
-          <h3 className="font-semibold" style={{ ...heading, color: C.ink }}>إتمام الشراء · {storeName}</h3>
-          {step < 3 && <button onClick={onClose}><X className="w-4 h-4" style={{ color: C.slate }} /></button>}
-        </div>
-
-        {step < 3 && (
-          <div className="flex px-5 pt-4 gap-2">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: i <= step ? accent : C.paperAlt }} />
-            ))}
-          </div>
-        )}
-
-        <div className="p-5">
-          {step === 0 && (
-            <div className="space-y-4">
-              {cart.map((i) => (
-                <div key={i.id} className="flex justify-between text-sm">
-                  <span style={{ color: C.ink }}>{i.name} × {i.qty}</span>
-                  <span style={{ color: C.ink }}>{money(i.price * i.qty, currency)}</span>
-                </div>
-              ))}
-              <div className="border-t pt-3 space-y-1.5" style={{ borderColor: C.line }}>
-                <div className="flex justify-between text-sm" style={{ color: C.slate }}><span>المجموع الفرعي</span><span>{money(subtotal, currency)}</span></div>
-                <div className="flex justify-between text-sm" style={{ color: C.slate }}><span>الشحن</span><span>{money(shippingFee, currency)}</span></div>
-                <div className="flex justify-between text-sm" style={{ color: C.slate }}><span>الضريبة</span><span>{money(tax, currency)}</span></div>
-                <div className="flex justify-between text-sm font-semibold pt-1" style={{ color: C.ink }}><span>الإجمالي</span><span>{money(total, currency)}</span></div>
-              </div>
-            </div>
-          )}
-
-          {step === 1 && (
-            <div className="space-y-4">
-              <Field label="الاسم الكامل"><input value={shipping.name} onChange={(e) => setShipping({ ...shipping, name: e.target.value })} className={inputCls} style={{ borderColor: errors.name ? C.rosewood : C.line }} /></Field>
-              <Field label="البريد الإلكتروني"><input value={shipping.email} onChange={(e) => setShipping({ ...shipping, email: e.target.value })} className={inputCls} style={{ borderColor: errors.email ? C.rosewood : C.line }} dir="ltr" /></Field>
-              <Field label="العنوان"><input value={shipping.address} onChange={(e) => setShipping({ ...shipping, address: e.target.value })} className={inputCls} style={{ borderColor: errors.address ? C.rosewood : C.line }} /></Field>
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="المدينة"><input value={shipping.city} onChange={(e) => setShipping({ ...shipping, city: e.target.value })} className={inputCls} style={{ borderColor: errors.city ? C.rosewood : C.line }} /></Field>
-                <Field label="الرمز البريدي"><input value={shipping.zip} onChange={(e) => setShipping({ ...shipping, zip: e.target.value })} className={inputCls} style={{ borderColor: errors.zip ? C.rosewood : C.line }} dir="ltr" /></Field>
-              </div>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="space-y-4">
-              <Field label="رقم البطاقة"><input placeholder="4242 4242 4242 4242" value={payment.card} onChange={(e) => setPayment({ ...payment, card: e.target.value })} className={inputCls} style={{ borderColor: errors.card ? C.rosewood : C.line }} dir="ltr" /></Field>
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="تاريخ الانتهاء"><input placeholder="MM/YY" value={payment.expiry} onChange={(e) => setPayment({ ...payment, expiry: e.target.value })} className={inputCls} style={{ borderColor: errors.expiry ? C.rosewood : C.line }} dir="ltr" /></Field>
-                <Field label="رمز الأمان CVC"><input placeholder="123" value={payment.cvc} onChange={(e) => setPayment({ ...payment, cvc: e.target.value })} className={inputCls} style={{ borderColor: errors.cvc ? C.rosewood : C.line }} dir="ltr" /></Field>
-              </div>
-              <p className="text-xs flex items-center gap-1.5" style={{ color: C.slate }}><CreditCard className="w-3.5 h-3.5" /> هذه عملية دفع تجريبية — لن يُخصم أي مبلغ فعلي من البطاقة.</p>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="text-center py-6">
-              <div className="w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4" style={{ backgroundColor: C.sageSoft }}>
-                <Check className="w-7 h-7" style={{ color: C.sage }} />
-              </div>
-              <h4 className="font-semibold text-lg" style={{ ...heading, color: C.ink }}>تم تأكيد الطلب</h4>
-              <p className="text-sm mt-1" style={{ color: C.slate }}>الطلب <LtrTag>{orderNumber}</LtrTag> · {money(total, currency)}</p>
-              <p className="text-sm mt-3 flex items-center justify-center gap-1.5" style={{ color: C.slate }}>
-                <Truck className="w-4 h-4" /> الوصول خلال 3-5 أيام عمل إلى {shipping.city || "عنوانك"}
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className="p-5 border-t flex justify-between gap-2" style={{ borderColor: C.line }}>
-          {step > 0 && step < 3 ? (
-            <button onClick={() => setStep(step - 1)} className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium border" style={{ borderColor: C.line, color: C.ink }}>
-              <ArrowRight className="w-4 h-4" /> رجوع
-            </button>
-          ) : <span />}
-
-          {step === 0 && (
-            <button onClick={() => setStep(1)} className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: accent }}>
-              متابعة إلى الشحن <ArrowLeft className="w-4 h-4" />
-            </button>
-          )}
-          {step === 1 && (
-            <button onClick={() => validateShipping() && setStep(2)} className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: accent }}>
-              متابعة إلى الدفع <ArrowLeft className="w-4 h-4" />
-            </button>
-          )}
-          {step === 2 && (
-            <button onClick={placeOrder} className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: accent }}>
-              إتمام الطلب <MapPin className="w-4 h-4" />
-            </button>
-          )}
-          {step === 3 && (
-            <button onClick={finish} className="px-4 py-2 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: C.ink }}>
-              متابعة التسوق
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ============================================================
-   APP ROOT
-   ============================================================ */
-function App() {
-  const [role, setRole] = usePersistentState("role", "super");
-  const [stores, setStores] = usePersistentState("stores", []);
-  const [products, setProducts] = usePersistentState("products", []);
-  const [orders, setOrders] = usePersistentState("orders", []);
-  const [settings, setSettings] = usePersistentState("settings", {
-    platformName: "سوقنا",
-    supportEmail: "support@souqna.app",
-    commission: 8,
-    currency: "IQD",
-    allowSignups: true,
-    maintenance: false,
-  });
-  const [merchantStoreSlug, setMerchantStoreSlug] = usePersistentState("merchantStoreSlug", null);
-  const [currentSlug, setCurrentSlug] = usePersistentState("currentSlug", null);
-  const [cart, setCart] = usePersistentState("cart", []);
-  const [toast, setToast] = useState(null);
-
-  const showToast = (message, type = "ok") => {
-    setToast({ message, type });
-    window.clearTimeout(showToast._t);
-    showToast._t = window.setTimeout(() => setToast(null), 2600);
-  };
-
-  const merchantStore = stores.find((s) => s.slug === merchantStoreSlug) || null;
-
-  const createStore = (store) => {
-    setStores((prev) => [...prev, store]);
-    setMerchantStoreSlug(store.slug);
-    showToast("تم إنشاء متجرك! بانتظار موافقة المشرف العام ليظهر للعامة.");
-  };
-
-  return (
-    <CurrencyContext.Provider value={settings.currency}>
-      <div dir="rtl" lang="ar" className="min-h-screen" style={{ backgroundColor: C.paper, fontFamily: "'Tajawal', sans-serif" }}>
-        <style>{FONT_LINK}</style>
-        <TopBar role={role} setRole={setRole} platformName={settings.platformName} />
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-          {role === "super" && (
-            <SuperAdmin stores={stores} setStores={setStores} settings={settings} setSettings={setSettings} showToast={showToast} />
-          )}
-          {role === "merchant" && (
-            merchantStore ? (
-              <MerchantDashboard
-                store={merchantStore}
-                setStores={setStores}
-                products={products}
-                setProducts={setProducts}
-                orders={orders}
-                setOrders={setOrders}
-                showToast={showToast}
-              />
-            ) : (
-              <CreateStoreScreen onCreate={createStore} />
-            )
-          )}
-          {role === "storefront" && (
-            <Storefront
-              stores={stores}
-              products={products}
-              currentSlug={currentSlug}
-              setCurrentSlug={setCurrentSlug}
-              cart={cart}
-              setCart={setCart}
-              orders={orders}
-              setOrders={setOrders}
-              setProducts={setProducts}
-              showToast={showToast}
-              onGoMerchant={() => setRole("merchant")}
-            />
-          )}
-        </div>
-        <Toast toast={toast} />
-      </div>
-    </CurrencyContext.Provider>
-  );
-}
-
-const rootEl = document.getElementById("root");
-ReactDOM.createRoot(rootEl).render(<App />);
-</script>
+                `;
+            });
+        }
+
+        function addProduct() {
+            const name = document.getElementById('p-name').value;
+            const price = Number(document.getElementById('p-price').value);
+            const desc = document.getElementById('p-desc').value;
+
+            if(!name || !price) {
+                alert('يرجى إدخال اسم المنتج والسعر على الأقل');
+                return;
+            }
+
+            products.push({ id: Date.now(), name, price, desc });
+            saveToStorage();
+            alert('تم إضافة المنتج بنجاح!');
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+            document.getElementById('p-desc').value = '';
+            showSection('home');
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            cart.push(product);
+            saveToStorage();
+            updateCartCount();
+            alert('تم إضافة المنتج إلى السلة');
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').innerText = cart.length;
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const totalContainer = document.getElementById('cart-total');
+            container.innerHTML = '';
+            
+            if(cart.length === 0) {
+                container.innerHTML = '<p>السلة فارغة حالياً.</p>';
+                totalContainer.innerText = '';
+                return;
+            }
+
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${item.name}</strong>
+                            <div style="color: #16a34a; font-size: 0.9rem;">${item.price.toLocaleString()} د.ع</div>
+                        </div>
+                        <button class="btn" style="background: #dc2626; max-width: 80px; padding: 0.4rem;" onclick="removeFromCart(${index})">حذف</button>
+                    </div>
+                `;
+            });
+            totalContainer.innerText = `المجموع الكلي: ${total.toLocaleString()} د.ع`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveToStorage();
+            renderCart();
+            updateCartCount();
+        }
+
+        function checkout() {
+            if(cart.length === 0) {
+                alert('السلة فارغة!');
+                return;
+            }
+            alert('تم إرسال طلبك بنجاح! شكراً لتسوقك من منصة سوقنا.');
+            cart = [];
+            saveToStorage();
+            renderCart();
+            updateCartCount();
+            showSection('home');
+        }
+
+        // تشغيل أولي
+        renderProducts();
+        updateCartCount();
+    </script>
 </body>
 </html>
