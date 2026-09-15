@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سوقنا - منصة التجارة الإلكترونية</title>
+    <title>سوقنا - منصة التجارة الإلكترونية الرقمية والمادية</title>
     <style>
         :root { --primary: #0f172a; --accent: #2563eb; --bg: #f8fafc; --text: #334155; }
         body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; direction: rtl; }
@@ -13,26 +13,25 @@
         nav button:hover { background: rgba(255,255,255,0.1); }
         .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
         .hero { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 3rem 2rem; border-radius: 1rem; text-align: center; margin-bottom: 2rem; }
-        .hero h1 { margin: 0 0 1rem; font-size: 2.5rem; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .card { background: white; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card { background: white; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; position: relative; }
         .card-img { height: 160px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #94a3b8; }
         .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
         .card-title { font-size: 1.25rem; font-weight: bold; margin: 0 0 0.5rem; color: #0f172a; }
-        .card-price { color: #16a34a; font-weight: bold; font-size: 1.1rem; margin-bottom: 1rem; }
-        .btn { background: var(--accent); color: white; border: none; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; }
+        .card-price { color: #16a34a; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .badge-digital { background: #dbeafe; color: #1e40af; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 0.5rem; }
+        .badge-sale { background: #fee2e2; color: #dc2626; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; position: absolute; top: 10px; right: 10px; }
+        .btn { background: var(--accent); color: white; border: none; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; margin-top: 0.5rem; }
         .btn:hover { background: #1d4ed8; }
         .btn-success { background: #16a34a; }
-        .btn-success:hover { background: #15803d; }
         .section { display: none; }
         .section.active { display: block; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1rem; margin-bottom: 0.5rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .admin-form { background: white; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
+        .form-box { background: white; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-        .form-group input, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; box-sizing: border-box; }
-        .badge { background: #fee2e2; color: #dc2626; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; box-sizing: border-box; }
+        .comment-section { margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 0.75rem; }
+        .comment-item { background: #f1f5f9; padding: 0.5rem; border-radius: 4px; font-size: 0.85rem; margin-top: 0.5rem; }
     </style>
 </head>
 <body>
@@ -47,81 +46,174 @@
     </header>
 
     <div class="container">
-        <!-- قسم الرئيسية -->
+        <!-- الرئيسية -->
         <div id="home" class="section active">
             <div class="hero">
-                <h1>مرحباً بك في منصة سوقنا</h1>
-                <p>وجهتك الأولى للتسوق الإلكتروني في العراق - أسعار بالدينار العراقي ودفع عند الاستلام</p>
+                <h1>منصة سوقنا المتقدمة</h1>
+                <p>متجرك المتكامل للمنتجات المادية والملفات الرقمية للرسم والويبتون بالدينار العراقي</p>
             </div>
             <h2>المنتجات المتوفرة</h2>
-            <div id="products-grid" class="grid">
-                <!-- المنتجات تضاف تلقائياً -->
+            <div id="products-grid" class="grid"></div>
+        </div>
+
+        <!-- السلة وإتمام الطلب -->
+        <div id="cart" class="section">
+            <h2>سلة المشتريات وإتمام الطلب</h2>
+            <div id="cart-items"></div>
+            <div id="cart-total" style="margin-top: 1.5rem; font-size: 1.25rem; font-weight: bold;"></div>
+
+            <div class="form-box" style="margin-top: 2rem;">
+                <h3>معلومات الزبون والتوصيل</h3>
+                <div class="form-group">
+                    <label>الاسم الثلاثي</label>
+                    <input type="text" id="c-name" placeholder="ادخل اسمك الكامل">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف (للتواصل)</label>
+                    <input type="text" id="c-phone" placeholder="07xxxxxxxx">
+                </div>
+                <div class="form-group">
+                    <label>المحافظة</label>
+                    <select id="c-city">
+                        <option value="بغداد">بغداد</option>
+                        <option value="البصرة">البصرة</option>
+                        <option value="الأنبار">الأنبار</option>
+                        <option value="بابل">بابل</option>
+                        <option value="أربيل">أربيل</option>
+                        <option value="النجف">النجف</option>
+                        <option value="كربلاء">كربلاء</option>
+                        <option value="المثنى">المثنى (السماوة)</option>
+                        <option value="ذي قار">ذي قار (الناصرية)</option>
+                        <option value="ميسان">ميسان (العمارة)</option>
+                        <option value="واسط">واسط (الكوت)</option>
+                        <option value="ديالى">ديالى</option>
+                        <option value="صلاح الدين">صلاح الدين</option>
+                        <option value="كركوك">كركوك</option>
+                        <option value="السليمانية">السليمانية</option>
+                        <option value="دهوك">دهوك</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>العنوان التفصيلي (المنطقة، القرب من...)</label>
+                    <textarea id="c-address" placeholder="ادخل عنوانك بالتفصيل"></textarea>
+                </div>
+
+                <div class="form-group" id="payment-method-box">
+                    <label>طريقة الدفع</label>
+                    <select id="c-payment">
+                        <option value="cod">الدفع عند الاستلام (متاحة للمنتجات المادية فقط)</option>
+                        <option value="electronic">دفع إلكتروني (آسيا سيل / كي كارت / ماستر كارد)</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-success" onclick="checkout()">تأكيد وإرسال الطلب</button>
             </div>
         </div>
 
-        <!-- قسم السلة -->
-        <div id="cart" class="section">
-            <h2>سلة المشتريات</h2>
-            <div id="cart-items"></div>
-            <div id="cart-total" style="margin-top: 1.5rem; font-size: 1.25rem; font-weight: bold;"></div>
-            <button class="btn btn-success" onclick="checkout()" style="margin-top: 1rem; max-width: 200px;">إتمام الطلب</button>
-        </div>
-
-        <!-- قسم لوحة التاجر -->
+        <!-- لوحة التاجر -->
         <div id="admin" class="section">
-            <h2>لوحة إدارة المتجر (إضافة منتج جديد)</h2>
-            <div class="admin-form">
+            <h2>لوحة إدارة التاجر - إضافة منتج جديد</h2>
+            <div class="form-box">
+                <div class="form-group">
+                    <label>نوع المنتج</label>
+                    <select id="p-type" onchange="toggleFileField()">
+                        <option value="physical">منتج مادي (يحتاج شحن وتوصيل)</option>
+                        <option value="digital">منتج رقمي (فرش، بوزات، ملفات ويبتون)</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>اسم المنتج</label>
-                    <input type="text" id="p-name" placeholder="مثال: حذاء رياضي أنيق">
+                    <input type="text" id="p-name" placeholder="مثال: حزمة فرش مانهاوا احترافية">
                 </div>
                 <div class="form-group">
                     <label>السعر (بالدينار العراقي)</label>
-                    <input type="number" id="p-price" placeholder="مثال: 25000">
+                    <input type="number" id="p-price" placeholder="25000">
                 </div>
                 <div class="form-group">
-                    <label>وصف مختصر</label>
-                    <textarea id="p-desc" placeholder="تفاصيل المنتج..."></textarea>
+                    <label>الكمية المتوفرة في المخزون</label>
+                    <input type="number" id="p-stock" value="10" placeholder="عدد القطع">
                 </div>
-                <button class="btn" onclick="addProduct()">إضافة المنتج للمتجر</button>
+                <div class="form-group" id="file-link-group" style="display:none;">
+                    <label>رابط الملف الرقمي (ل التحميل المباشر)</label>
+                    <input type="text" id="p-file" placeholder="ضع رابط ملف التحميل هنا">
+                </div>
+                <div class="form-group">
+                    <label>رابط الصورة أو الغلاف</label>
+                    <input type="text" id="p-img" placeholder="رابط صورة المنتج">
+                </div>
+                <div class="form-group">
+                    <label>وصف المنتج</label>
+                    <textarea id="p-desc" placeholder="تفاصيل المنتج الرقمي أو المادي..."></textarea>
+                </div>
+                <button class="btn" onclick="addProduct()">نشر المنتج في المتجر</button>
             </div>
         </div>
     </div>
 
     <script>
-        // بيانات المنتجات الافتراضية مع حفظ البيانات بـ localStorage
         let products = JSON.parse(localStorage.getItem('souqna_products')) || [
-            id: 1, name: 'ساعة يد ذكية فاخرة', price: 35000, desc: 'ساعة ذكية مقاومة للماء مع شاشة ملونة عالية الدقة.' },
-            id: 2, name: 'سماعات بلوتوث لاسلكية', price: 20000, desc: 'صوت نقي وبطارية تدوم طويلاً.' },
-            id: 3, name: 'حذاء رياضي مريح', price: 45000, desc: 'تصميم عصري ومريح للاستخدام اليومي.' }
+            { id: 1, type: 'digital', name: 'حزمة فرش ويبتون ومناظر طبيعية', price: 15000, stock: 2, file: '#', img: '', desc: 'فرش مخصصة لبرامج الرسم الرقمي.' },
+            { id: 2, type: 'physical', name: 'قلم تابلت راسم ذكي', price: 45000, stock: 10, file: '', img: '', desc: 'قلم عالي الدقة للرسم على الأجهزة اللوحية.' }
         ];
 
         let cart = JSON.parse(localStorage.getItem('souqna_cart')) || [];
+        let comments = JSON.parse(localStorage.getItem('souqna_comments')) || {};
 
-        function saveToStorage() {
+        function saveStorage() {
             localStorage.setItem('souqna_products', JSON.stringify(products));
             localStorage.setItem('souqna_cart', JSON.stringify(cart));
+            localStorage.setItem('souqna_comments', JSON.stringify(comments));
         }
 
-        function showSection(sectionId) {
+        function showSection(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            if(sectionId === 'home') renderProducts();
-            if(sectionId === 'cart') renderCart();
+            document.getElementById(id).classList.add('active');
+            if(id === 'home') renderProducts();
+            if(id === 'cart') renderCart();
+        }
+
+        function toggleFileField() {
+            const type = document.getElementById('p-type').value;
+            document.getElementById('file-link-group').style.display = type === 'digital' ? 'block' : 'none';
         }
 
         function renderProducts() {
             const grid = document.getElementById('products-grid');
             grid.innerHTML = '';
             products.forEach(p => {
+                // نظام الخصم التلقائي 5% إذا كانت القطع 3 أو أقل
+                let finalPrice = p.price;
+                let isSale = p.stock <= 3 && p.stock > 0;
+                if(isSale) {
+                    finalPrice = Math.round(p.price * 0.95);
+                }
+
+                let productComments = comments[p.id] || [];
+                let commentsHtml = productComments.map(c => `<div class="comment-item">💬 <b>${c.name}:</b> ${c.text}</div>`).join('');
+
                 grid.innerHTML += `
                     <div class="card">
+                        ${isSale ? '<div class="badge-sale">خصم القطع الأخيرة 5%!</div>' : ''}
                         <div class="card-img">📦</div>
                         <div class="card-body">
+                            ${p.type === 'digital' ? '<span class="badge-digital">📁 منتج رقمي</span>' : '<span class="badge-digital" style="background:#f3f4f6; color:#374151">📦 منتج مادي</span>'}
                             <h3 class="card-title">${p.name}</h3>
                             <p style="color: #64748b; font-size: 0.9rem; flex-grow: 1;">${p.desc}</p>
-                            <div class="card-price">${p.price.toLocaleString()} د.ع</div>
+                            <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.3rem;">المخزون: ${p.stock} قطع</div>
+                            <div class="card-price">
+                                ${isSale ? `<span style="text-decoration: line-through; color: #94a3b8; font-size: 0.9rem; margin-left: 5px;">${p.price.toLocaleString()}</span>` : ''}
+                                ${finalPrice.toLocaleString()} د.ع
+                            </div>
                             <button class="btn" onclick="addToCart(${p.id})">إضافة للسلة</button>
+
+                            <div class="comment-section">
+                                <div style="font-size: 0.85rem; font-weight: bold; margin-bottom: 4px;">التعليقات والتقييمات:</div>
+                                <div id="comments-${p.id}" style="max-height: 100px; overflow-y: auto;">${commentsHtml}</div>
+                                <div style="margin-top: 5px; display: flex; gap: 4px;">
+                                    <input type="text" id="c-input-${p.id}" placeholder="اكتب تعليقك..." style="font-size: 0.8rem; padding: 4px; flex-grow: 1; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                    <button onclick="addComment(${p.id})" style="font-size: 0.8rem; padding: 4px 8px; background: #0f172a; color: white; border: none; border-radius: 4px; cursor: pointer;">تعليق</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -129,30 +221,35 @@
         }
 
         function addProduct() {
+            const type = document.getElementById('p-type').value;
             const name = document.getElementById('p-name').value;
             const price = Number(document.getElementById('p-price').value);
+            const stock = Number(document.getElementById('p-stock').value);
+            const file = document.getElementById('p-file').value;
+            const img = document.getElementById('p-img').value;
             const desc = document.getElementById('p-desc').value;
 
             if(!name || !price) {
-                alert('يرجى إدخال اسم المنتج والسعر على الأقل');
+                alert('يرجى إدخال اسم المنتج والسعر الأساسي.');
                 return;
             }
 
-            products.push({ id: Date.now(), name, price, desc });
-            saveToStorage();
-            alert('تم إضافة المنتج بنجاح!');
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-price').value = '';
-            document.getElementById('p-desc').value = '';
+            products.push({ id: Date.now(), type, name, price, stock, file, img, desc });
+            saveStorage();
+            alert('تم نشر المنتج بنجاح في المنصة!');
             showSection('home');
         }
 
         function addToCart(id) {
             const product = products.find(p => p.id === id);
+            if(product.stock <= 0) {
+                alert('عذراً، نفدت الكمية من المخزون!');
+                return;
+            }
             cart.push(product);
-            saveToStorage();
+            saveStorage();
             updateCartCount();
-            alert('تم إضافة المنتج إلى السلة');
+            alert('تمت الإضافة إلى السلة بنجاح.');
         }
 
         function updateCartCount() {
@@ -163,21 +260,34 @@
             const container = document.getElementById('cart-items');
             const totalContainer = document.getElementById('cart-total');
             container.innerHTML = '';
-            
+
             if(cart.length === 0) {
-                container.innerHTML = '<p>السلة فارغة حالياً.</p>';
+                container.innerHTML = '<p>سلة المشتريات فارغة حالياً.</p>';
                 totalContainer.innerText = '';
                 return;
             }
 
             let total = 0;
+            let hasDigital = cart.some(item => item.type === 'digital');
+
+            // ضبط خيارات الدفع تلقائياً حسب نوع المنتجات بالسلة
+            const paymentSelect = document.getElementById('c-payment');
+            if(hasDigital) {
+                paymentSelect.value = 'electronic';
+                paymentSelect.disabled = true;
+                alert('ملاحظة: سلتك تحتوي على منتجات رقمية، لذا تم تحديد الدفع الإلكتروني (آسيا سيل / كي كارت / ماستر) إجبارياً.');
+            } else {
+                paymentSelect.disabled = false;
+            }
+
             cart.forEach((item, index) => {
-                total += item.price;
+                let finalPrice = item.stock <= 3 ? Math.round(item.price * 0.95) : item.price;
+                total += finalPrice;
                 container.innerHTML += `
-                    <div class="cart-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: white; padding: 1rem; margin-bottom: 0.5rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                         <div>
                             <strong>${item.name}</strong>
-                            <div style="color: #16a34a; font-size: 0.9rem;">${item.price.toLocaleString()} د.ع</div>
+                            <div style="color: #16a34a; font-size: 0.9rem;">${finalPrice.toLocaleString()} د.ع ${item.type === 'digital' ? '(رقمي)' : ''}</div>
                         </div>
                         <button class="btn" style="background: #dc2626; max-width: 80px; padding: 0.4rem;" onclick="removeFromCart(${index})">حذف</button>
                     </div>
@@ -188,25 +298,57 @@
 
         function removeFromCart(index) {
             cart.splice(index, 1);
-            saveToStorage();
+            saveStorage();
             renderCart();
             updateCartCount();
         }
 
+        function addComment(productId) {
+            const input = document.getElementById(`c-input-${productId}`);
+            const text = input.value.trim();
+            if(!text) return;
+
+            const userName = prompt('أدخل اسمك الكريم لكتابة التعليق:') || 'زائر';
+            if(!comments[productId]) comments[productId] = [];
+            comments[productId].push({ name: userName, text: text });
+            saveStorage();
+            input.value = '';
+            renderProducts();
+        }
+
         function checkout() {
-            if(cart.length === 0) {
-                alert('السلة فارغة!');
+            const name = document.getElementById('c-name').value;
+            const phone = document.getElementById('c-phone').value;
+            const city = document.getElementById('c-city').value;
+            const address = document.getElementById('c-address').value;
+            const payment = document.getElementById('c-payment').value;
+
+            if(!name || !phone || !address) {
+                alert('يرجى ملء كافة معلومات الزبون (الاسم، الهاتف، العنوان)');
                 return;
             }
-            alert('تم إرسال طلبك بنجاح! شكراً لتسوقك من منصة سوقنا.');
+
+            let hasDigital = cart.some(item => item.type === 'digital');
+            if(hasDigital && payment !== 'electronic') {
+                alert('المنتجات الرقمية تتطلب الدفع الإلكتروني حصراً (آسيا سيل / كي كارت / ماستر كارد).');
+                return;
+            }
+
+            // تقليل المخزون للمنتجات المباعة
+            cart.forEach(item => {
+                let p = products.find(prod => prod.id === item.id);
+                if(p && p.stock > 0) p.stock--;
+            });
+
+            alert(`تم إرسال طلبك بنجاح يا ${name}!\nالمحافظة: ${city}\nطريقة الدفع: ${payment === 'electronic' ? 'إلكتروني (آسيا سيل / كي كارت)' : 'عند الاستلام'}\nشكراً لتسوقك من سوقنا.`);
+            
             cart = [];
-            saveToStorage();
+            saveStorage();
             renderCart();
             updateCartCount();
             showSection('home');
         }
 
-        // تشغيل أولي
         renderProducts();
         updateCartCount();
     </script>
