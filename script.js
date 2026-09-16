@@ -1,10 +1,8 @@
 // Data Store
 let storeData = JSON.parse(localStorage.getItem('hor_store')) || null;
 let allOrders = JSON.parse(localStorage.getItem('hor_orders')) || [];
-let allComments = JSON.parse(localStorage.getItem('hor_comments')) || [];
 let cart = [];
 
-// Page Navigation Function (Like real websites)
 function switchPage(pageId) {
     document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
@@ -15,7 +13,6 @@ function switchPage(pageId) {
     if(pageId === 'cartPage') renderCartPageContent();
 }
 
-// Render Merchant Form or Store Dashboard Page
 function renderStorePageContent() {
     let box = document.getElementById('storePageContent');
     if(!storeData) {
@@ -33,17 +30,23 @@ function renderStorePageContent() {
             prodHtml = '<p style="color:#94a3b8; font-size:0.85rem; margin-top:8px;">لم تضف أي منتج بعد.</p>';
         } else {
             storeData.products.forEach((p, idx) => {
+                let shareText = `منتج ${p.name} بسعر ${p.price} د.ع متوفر في منصة هور للتجارة الإلكترونية!`;
                 prodHtml += `
                     <div class="product-card">
                         <div>
                             <strong>${p.name}</strong> - <span style="color:var(--secondary);">${p.price} د.ع</span>
                             <div style="font-size:0.75rem; color:#64748b;">${p.desc}</div>
                         </div>
-                        <button onclick="deleteProduct(${idx})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">حذف</button>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="shareProductItem('${p.name}', '${p.price}')" style="background:#0284c7; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">مشاركة</button>
+                            <button onclick="deleteProduct(${idx})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">حذف</button>
+                        </div>
                     </div>
                 `;
             });
         }
+
+        let storeLink = `https://zahraaas313adam-code.github.io/hor/?store=${encodeURIComponent(storeData.name)}`;
 
         box.innerHTML = `
             <div style="display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:10px;">
@@ -53,12 +56,28 @@ function renderStorePageContent() {
                     <span style="font-size:0.75rem; color:#64748b;">البريد: ${storeData.email} | الهاتف: ${storeData.phone}</span>
                 </div>
             </div>
+            
+            <!-- لوحة إحصائيات التاجر (العدادات) -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
+                <div style="background:#f8fafc; padding:10px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                    <div style="font-size:0.75rem; color:#64748b;">عدد منتجاتك</div>
+                    <div style="font-size:1.2rem; font-weight:bold; color:var(--primary);">${storeData.products.length}</div>
+                </div>
+                <div style="background:#f8fafc; padding:10px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                    <div style="font-size:0.75rem; color:#64748b;">طلبات الزبائن</div>
+                    <div style="font-size:1.2rem; font-weight:bold; color:var(--secondary);">${allOrders.length}</div>
+                </div>
+            </div>
+
             <div style="margin-bottom:12px;">
                 <span style="font-size:0.85rem; font-weight:bold; color:#334155;">رابط متجرك الخاص:</span>
-                <input type="text" class="form-control" readonly value="https://zahraaas313adam-code.github.io/hor/?store=${encodeURIComponent(storeData.name)}" style="font-size:0.75rem; background:#f1f5f9; margin-top:3px;">
+                <div style="display:flex; gap:5px; margin-top:3px;">
+                    <input type="text" id="storeLinkInput" class="form-control" readonly value="${storeLink}" style="font-size:0.75rem; background:#f1f5f9;">
+                    <button class="btn-main" style="width:auto; padding:0 12px; font-size:0.8rem;" onclick="copyStoreLink()">نسخ</button>
+                </div>
             </div>
             <button class="btn-main" style="background:var(--secondary); margin-bottom:15px;" onclick="switchPage('addProductPage')">+ أضف منتج جديد</button>
-            <h4 style="font-size:0.9rem; color:#334155; margin-bottom:5px;">منتجات متجرك (${storeData.products.length}):</h4>
+            <h4 style="font-size:0.9rem; color:#334155; margin-bottom:5px;">منتجات متجرك:</h4>
             ${prodHtml}
         `;
     }
@@ -76,6 +95,22 @@ function registerStore() {
     localStorage.setItem('hor_store', JSON.stringify(storeData));
     renderStorePageContent();
     alert("مبروك! تم إنشاء متجرك بنجاح 🎉");
+}
+
+function copyStoreLink() {
+    let input = document.getElementById('storeLinkInput');
+    navigator.clipboard.writeText(input.value);
+    alert("تم نسخ رابط متجرك بنجاح! شاركه الآن مع أصدقائك 📋✨");
+}
+
+function shareProductItem(name, price) {
+    let text = `تسوق الآن منتج "${name}" بسعر ${price} د.ع من منصة هور للتجارة الإلكترونية!`;
+    if (navigator.share) {
+        navigator.share({ title: name, text: text, url: window.location.href }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(text);
+        alert("تم نسخ تفاصيل المنتج لمشاركتها!");
+    }
 }
 
 function saveProduct() {
@@ -140,7 +175,6 @@ function checkoutOrder() {
     switchPage('homePage');
 }
 
-// Programmer (Admin) Page View
 function renderAdminContent() {
     let box = document.getElementById('adminPanelContent');
     let storeInfo = storeData ? `<p><b>اسم المتجر المسجل:</b> ${storeData.name} (عدد المنتجات: ${storeData.products.length})</p><p><b>البريد والهاتف:</b> ${storeData.email} - ${storeData.phone}</p>` : `<p style="color:#94a3b8;">لا توجد متاجر مسجلة حالياً.</p>`;
@@ -166,7 +200,6 @@ function renderAdminContent() {
     `;
 }
 
-// On Load check URL for store viewing
 window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
     const targetStore = urlParams.get('store');
