@@ -19,10 +19,15 @@ function renderStorePageContent() {
         box.innerHTML = `
             <h3 style="margin-bottom: 15px; color: var(--primary);">تسجيل متجر جديد على هور</h3>
             <div class="form-group"><label class="form-label">اسم المتجر:</label><input type="text" id="regName" class="form-control" placeholder="مثال: متجر عشتار"></div>
-            <div class="form-group"><label class="form-label">رابط اللوكو (شعار المتجر):</label><input type="text" id="regLogo" class="form-control" placeholder="رابط الصورة أو رمز 🎨"></div>
+            
+            <div class="form-group">
+                <label class="form-label">شعار المتجر (اضغط لاختيار صورة من جهازك):</label>
+                <input type="file" id="regLogoFile" class="form-control" accept="image/*" style="padding: 7px;">
+            </div>
+
             <div class="form-group"><label class="form-label">رقم الهاتف:</label><input type="text" id="regPhone" class="form-control" placeholder="07xxxxxxxxx"></div>
             <div class="form-group"><label class="form-label">البريد الإلكتروني:</label><input type="email" id="regEmail" class="form-control" placeholder="name@email.com"></div>
-            <button class="btn-main" onclick="registerStore()">تسجيل المتجر الآن</button>
+            <button class="btn-main" onclick="registerStoreWithImage()">تسجيل المتجر الآن</button>
         `;
     } else {
         let prodHtml = '';
@@ -30,12 +35,15 @@ function renderStorePageContent() {
             prodHtml = '<p style="color:#94a3b8; font-size:0.85rem; margin-top:8px;">لم تضف أي منتج بعد.</p>';
         } else {
             storeData.products.forEach((p, idx) => {
-                let shareText = `منتج ${p.name} بسعر ${p.price} د.ع متوفر في منصة هور للتجارة الإلكترونية!`;
+                let imgTag = p.image ? `<img src="${p.image}" width="40" height="40" style="border-radius:6px; object-fit:cover; margin-left:8px;" />` : '';
                 prodHtml += `
                     <div class="product-card">
-                        <div>
-                            <strong>${p.name}</strong> - <span style="color:var(--secondary);">${p.price} د.ع</span>
-                            <div style="font-size:0.75rem; color:#64748b;">${p.desc}</div>
+                        <div style="display:flex; align-items:center;">
+                            ${imgTag}
+                            <div>
+                                <strong>${p.name}</strong> - <span style="color:var(--secondary);">${p.price} د.ع</span>
+                                <div style="font-size:0.75rem; color:#64748b;">${p.desc}</div>
+                            </div>
                         </div>
                         <div style="display:flex; gap:5px;">
                             <button onclick="shareProductItem('${p.name}', '${p.price}')" style="background:#0284c7; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">مشاركة</button>
@@ -47,17 +55,17 @@ function renderStorePageContent() {
         }
 
         let storeLink = `https://zahraaas313adam-code.github.io/hor/?store=${encodeURIComponent(storeData.name)}`;
+        let logoDisplay = storeData.logo.startsWith('data:image') || storeData.logo.startsWith('http') ? `<img src="${storeData.logo}" width="40" height="40" style="border-radius:50%; object-fit:cover;"/>` : storeData.logo;
 
         box.innerHTML = `
             <div style="display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:10px;">
-                <div style="font-size:2rem;">${storeData.logo.startsWith('http') ? '<img src="'+storeData.logo+'" width="40" height="40" style="border-radius:50%"/>' : storeData.logo}</div>
+                <div style="font-size:2rem; display:flex; align-items:center;">${logoDisplay}</div>
                 <div>
                     <h3 style="color:var(--primary);">${storeData.name}</h3>
                     <span style="font-size:0.75rem; color:#64748b;">البريد: ${storeData.email} | الهاتف: ${storeData.phone}</span>
                 </div>
             </div>
             
-            <!-- لوحة إحصائيات التاجر (العدادات) -->
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
                 <div style="background:#f8fafc; padding:10px; border-radius:8px; border:1px solid var(--border); text-align:center;">
                     <div style="font-size:0.75rem; color:#64748b;">عدد منتجاتك</div>
@@ -83,18 +91,29 @@ function renderStorePageContent() {
     }
 }
 
-function registerStore() {
+function registerStoreWithImage() {
     let name = document.getElementById('regName').value;
-    let logo = document.getElementById('regLogo').value || '🏪';
     let phone = document.getElementById('regPhone').value;
     let email = document.getElementById('regEmail').value;
+    let fileInput = document.getElementById('regLogoFile');
 
     if(!name || !phone) { alert("يرجى إكمال الحقول الأساسية!"); return; }
 
-    storeData = { name, logo, phone, email, products: [] };
-    localStorage.setItem('hor_store', JSON.stringify(storeData));
-    renderStorePageContent();
-    alert("مبروك! تم إنشاء متجرك بنجاح 🎉");
+    if(fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            storeData = { name, logo: e.target.result, phone, email, products: [] };
+            localStorage.setItem('hor_store', JSON.stringify(storeData));
+            renderStorePageContent();
+            alert("مبروك! تم إنشاء متجرك مع الشعار بنجاح 🎉");
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        storeData = { name, logo: '🏪', phone, email, products: [] };
+        localStorage.setItem('hor_store', JSON.stringify(storeData));
+        renderStorePageContent();
+        alert("مبروك! تم إنشاء متجرك بنجاح 🎉");
+    }
 }
 
 function copyStoreLink() {
@@ -113,18 +132,29 @@ function shareProductItem(name, price) {
     }
 }
 
-function saveProduct() {
+function saveProductWithImage() {
     let name = document.getElementById('pName').value;
     let price = document.getElementById('pPrice').value;
     let desc = document.getElementById('pDesc').value;
-    let image = document.getElementById('pImage').value;
+    let fileInput = document.getElementById('pImageFile');
 
     if(!name || !price) { alert("أدخل اسم المنتج والسعر!"); return; }
 
-    storeData.products.push({ name, price, desc, image });
-    localStorage.setItem('hor_store', JSON.stringify(storeData));
-    switchPage('storePage');
-    alert("تم إضافة المنتج ونشره بمتجرك بنجاح ✨");
+    if(fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            storeData.products.push({ name, price, desc, image: e.target.result });
+            localStorage.setItem('hor_store', JSON.stringify(storeData));
+            switchPage('storePage');
+            alert("تم إضافة المنتج مع صورته ونشره بمتجرك بنجاح ✨");
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        storeData.products.push({ name, price, desc, image: '' });
+        localStorage.setItem('hor_store', JSON.stringify(storeData));
+        switchPage('storePage');
+        alert("تم إضافة المنتج ونشره بمتجرك بنجاح ✨");
+    }
 }
 
 function deleteProduct(idx) {
@@ -207,11 +237,15 @@ window.onload = function() {
         let container = document.getElementById('homeMainContainer');
         let prodsHtml = '';
         storeData.products.forEach((p) => {
+            let imgTag = p.image ? `<img src="${p.image}" width="50" height="50" style="border-radius:6px; object-fit:cover; margin-left:8px;" />` : '';
             prodsHtml += `
                 <div class="product-card">
-                    <div>
-                        <b>${p.name}</b> - <span style="color:var(--secondary);">${p.price} د.ع</span>
-                        <div style="font-size:0.75rem; color:#64748b;">${p.desc}</div>
+                    <div style="display:flex; align-items:center;">
+                        ${imgTag}
+                        <div>
+                            <b>${p.name}</b> - <span style="color:var(--secondary);">${p.price} د.ع</span>
+                            <div style="font-size:0.75rem; color:#64748b;">${p.desc}</div>
+                        </div>
                     </div>
                     <button class="btn-main" style="width:auto; padding:6px 12px; font-size:0.8rem;" onclick="addToCart('${p.name}', '${p.price}')">شراء</button>
                 </div>
