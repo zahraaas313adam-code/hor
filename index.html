@@ -3,113 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>هور | منصة التجارة المتعددة</title>
+    <title>هور | HOR - منصة التجارة المتعددة</title>
+    <!-- ربط ملف التصميم الخارجي -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <header class="navbar">
-        <div class="logo">هور | منصة التجارة المتعددة</div>
-        <div class="nav-links">
-            <button class="nav-btn active" onclick="switchPage('homePage')">🏠 الرئيسية</button>
-            <button class="nav-btn" onclick="switchPage('storePage')" style="background:var(--secondary); color:#fff;">👤 الملف الشخصي ومتجري</button>
-            <button class="nav-btn" onclick="switchPage('adminPage')" style="background:#475569; color:#fff;">🛠️ لوحة المبرمج</button>
+    <!-- Top Navbar -->
+    <div class="navbar">
+        <div class="nav-brand" onclick="switchPage('homePage')">هور | HOR - منصة التجارة المتعددة</div>
+        <div class="nav-buttons">
+            <button class="nav-btn gold" onclick="switchPage('storePage')">👤 الملف الشخصي ومتجري</button>
+            <button class="nav-btn" onclick="switchPage('adminPage')">👑 لوحة المبرمج</button>
         </div>
-    </header>
-
-    <!-- FLOATING CART BUTTON -->
-    <div id="cartFloatBtn" class="cart-float" style="display:none;" onclick="switchPage('cartPage')">
-        🛒 سلة الشراء (<span id="cartCount">0</span>)
     </div>
 
-    <!-- MAIN CONTENT CONTAINER -->
-    <main class="main-container">
-
-        <!-- 1. HOME PAGE -->
-        <div id="homePage" class="page-view active">
-            <div class="panel">
-                <h2>مرحباً بكم في منصة هور 🛍️</h2>
-                <p style="color:#64748b; font-size:0.9rem; margin-top:5px;">المنصة العراقية الأولى لإنشاء المتاجر الإلكترونية بكل سهولة.</p>
-                <div id="homeMainContainer" style="margin-top:20px;">
-                    <div style="text-align:center; padding:30px; color:#94a3b8;">
-                        اختر متجراً أو افتح رابط متجر خاص لتسوق المنتجات مباشرة.
-                    </div>
-                </div>
+    <!-- 1. HOME PAGE -->
+    <div id="homePage" class="page-view active">
+        <div class="search-container">
+            <div class="search-box-wrapper">
+                <input type="text" class="search-input" placeholder="ابحث عن المتاجر، الملابس، المجوهرات، أو الملفات الرقمية...">
+                <button class="search-btn">بحث</button>
+            </div>
+            <div class="categories-scroll">
+                <div class="cat-chip active">الكل</div>
+                <div class="cat-chip">ملابس</div>
+                <div class="cat-chip">مجوهرات وإكسسوارات</div>
+                <div class="cat-chip">رقمي (فرش رسم رقمي)</div>
             </div>
         </div>
 
-        <!-- 2. STORE / PROFILE PAGE -->
-        <div id="storePage" class="page-view">
+        <div class="hero-section">
+            <div class="hero-logo">HOR</div>
+            <div class="hero-slogan">هور......... شراء سهل، بيع أسهل</div>
+        </div>
+
+        <div class="container" id="homeMainContainer">
+            <div class="panel" style="text-align: center;">
+                <h3 style="color: var(--primary); margin-bottom: 8px;">مرحباً بك في منصة هور 🏛️</h3>
+                <p style="color: #64748b; font-size: 0.9rem;">اضغط على زر "الملف الشخصي ومتجري" بالأعلى لتسجيل متجرك أو إدارة منتجاتك بكل سهولة.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MERCHANT / STORE PAGE -->
+    <div id="storePage" class="page-view">
+        <div class="container">
             <div class="panel">
                 <div id="storePageContent">
-                    <!-- سيتم تعبئته ديناميكياً عبر الجافاسكريبت -->
+                    <!-- Dynamic: Store Registration or Dashboard -->
                 </div>
             </div>
         </div>
-
-        <!-- ADD PRODUCT PAGE -->
-        <div id="addProductPage" class="page-view">
-            <div class="container">
-                <div class="panel" style="max-width: 500px; margin: 0 auto;">
-                    <h3 style="margin-bottom: 15px; color: var(--secondary);">إضافة منتج جديد لمتجرك</h3>
-                    <div class="form-group">
-                        <label class="form-label">اسم المنتج:</label>
-                        <input type="text" id="pName" class="form-control" placeholder="مثال: فستان سهرة كوري">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">السعر (د.ع):</label>
-                        <input type="text" id="pPrice" class="form-control" placeholder="25,000">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">وصف المنتج:</label>
-                        <textarea id="pDesc" class="form-control" placeholder="تفاصيل المنتج، المقاسات، أو طريقة التحميل..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">صورة المنتج (اضغط لاختيار صورة من جهازك):</label>
-                        <input type="file" id="pImageFile" class="form-control" accept="image/*" style="padding: 7px;">
-                    </div>
-                    <button class="btn-main" onclick="saveProductWithImage()">حفظ ونشر المنتج</button>
-                    <button class="btn-main" style="background:#64748b; margin-top:8px;" onclick="switchPage('storePage')">رجوع لمتجري</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. CART / CHECKOUT PAGE -->
-        <div id="cartPage" class="page-view">
+    </div>
+        <!-- 3. ADD PRODUCT PAGE -->
+    <div id="addProductPage" class="page-view">
+        <div class="container">
             <div class="panel" style="max-width: 500px; margin: 0 auto;">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">سلة التسوق وإتمام الطلب 🛒</h3>
-                <div id="cartItemsList" style="margin-bottom: 15px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-                    <!-- المنتجات داخل السلة -->
+                <h3 style="margin-bottom: 15px; color: var(--secondary);">إضافة منتج جديد لمتجرك</h3>
+                <div class="form-group">
+                    <label class="form-label">اسم المنتج:</label>
+                    <input type="text" id="pName" class="form-control" placeholder="مثال: فستان سهرة كوري">
                 </div>
-                <h4 style="margin-bottom: 10px; font-size: 0.9rem; color:#334155;">معلومات التوصيل:</h4>
-                <div class="form-group"><label class="form-label">الاسم الكامل:</label><input type="text" id="cName" class="form-control" placeholder="اسمك الكريم"></div>
+                <div class="form-group">
+                    <label class="form-label">السعر (د.ع):</label>
+                    <input type="text" id="pPrice" class="form-control" placeholder="25,000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">وصف المنتج:</label>
+                    <textarea id="pDesc" class="form-control" placeholder="تفاصيل المنتج، المقاسات، أو طريقة التحميل..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">صورة المنتج (اضغط لاختيار صورة من جهازك):</label>
+                    <input type="file" id="pImageFile" class="form-control" accept="image/*" style="padding: 7px;">
+                </div>
+                <button class="btn-main" onclick="saveProductWithImage()">حفظ ونشر المنتج</button>
+                <button class="btn-main" style="background:#64748b; margin-top:8px;" onclick="switchPage('storePage')">رجوع لمتجري</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 4. ADMIN PROGRAMMER PAGE -->
+    <div id="adminPage" class="page-view">
+        <div class="container">
+            <div class="panel">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">👑 لوحة تحكم المبرمج (كل المتاجر والزبائن)</h3>
+                <div id="adminPanelContent" style="font-size: 0.9rem; color: #334155; line-height: 1.6;">
+                    <!-- Admin details loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. CART & CHECKOUT PAGE (FOR CUSTOMERS) -->
+    <div id="cartPage" class="page-view">
+        <div class="container">
+            <div class="panel" style="max-width: 500px; margin: 0 auto;">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">🛒 سلة المشتريات وإتمام الطلب</h3>
+                <div id="cartItemsList" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;"></div>
+                
+                <h4 style="margin-bottom: 10px; font-size: 0.95rem; color: var(--secondary);">معلومات التوصيل:</h4>
+                <div class="form-group"><label class="form-label">الاسم الكامل:</label><input type="text" id="cName" class="form-placeholder" placeholder="اسمك الكريم"></div>
                 <div class="form-group"><label class="form-label">رقم الهاتف:</label><input type="text" id="cPhone" class="form-control" placeholder="07xxxxxxxxx"></div>
-                <div class="form-group"><label class="form-label">عنوان التوصيل (المحافظة / المنطقة):</label><input type="text" id="cAddress" class="form-control" placeholder="مثال: بغداد - الكرادة"></div>
+                <div class="form-group"><label class="form-label">المحافظة والعنوان بالتفصيل:</label><input type="text" id="cAddress" class="form-control" placeholder="مثال: بغداد، الكرادة، شارع الأربعين..."></div>
+                
                 <div class="form-group">
                     <label class="form-label">طريقة الدفع:</label>
                     <select id="cPayment" class="form-control">
-                        <option value="الدفع عند الاستلام">الدفع عند الاستلام (نقداً)</option>
-                        <option value="زين كاش">زين كاش</option>
+                        <option value="عند الاستلام">الدفع عند الاستلام</option>
+                        <option value="زين كاش / آسيا سيل">زين كاش / رصيد آسيا سيل</option>
+                        <option value="كي كارد (Qi Card)">كي كارد (Qi Card)</option>
+                        <option value="ماستر كارد">ماستر كارد (Mastercard)</option>
                     </select>
                 </div>
-                <button class="btn-main" onclick="checkoutOrder()">تأكيد وإرسال الطلب نهائياً</button>
-                <button class="btn-main" style="background:#64748b; margin-top:8px;" onclick="switchPage('homePage')">متابعة التسوق</button>
+                <button class="btn-main" onclick="checkoutOrder()">إتمام الطلب وتأكيد الشراء</button>
+                <button class="btn-main" style="background:#64748b; margin-top:8px;" onclick="switchPage('homePage')">العودة للرئيسية</button>
             </div>
         </div>
+    </div>
 
-        <!-- 4. ADMIN PANEL -->
-        <div id="adminPage" class="page-view">
-            <div class="panel">
-                <h3 style="color: var(--primary); margin-bottom: 15px;">لوحة تحكم ومتابعة المبرمج 🛠️</h3>
-                <div id="adminPanelContent">
-                    <!-- سيتم تعبئته ديناميكياً -->
-                </div>
-            </div>
-        </div>
+    <!-- Floating Cart Button -->
+    <div class="cart-float" id="cartFloatBtn" style="display:none;" onclick="switchPage('cartPage')">
+        🛒 سلة الشراء (<span id="cartCount">0</span>)
+    </div>
 
-    </main>
-
+    <!-- ربط ملف البرمجة الخارجي -->
     <script src="script.js"></script>
 </body>
 </html>
